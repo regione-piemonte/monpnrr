@@ -1,0 +1,23 @@
+<div class="subtitle-checklist ml-3" *ngIf="showTitle && choice===choiseEnum.CHECKLIST">
+  <p>Nella sezione <b>Documentazione CUP</b> si trovano le voci riguardanti la documentazione generale, nella sezione <b>Documentazione CIG</b> si trovano le voci specifiche delle gare.</p>
+</div>
+
+  <button type="button" class="btn btn-link btn-annulla mr-2" [class.button-disabled]="readOnly" [disabled]="readOnly" (click)="annullaAutocontrollo('VERIFICA_2')" *ngIf="choice===choiseEnum.VERIFICA_2">ANNULLA</button>
+  <button type="button" class="btn btn-link btn-annulla mr-2" [class.button-disabled]="readOnly" [disabled]="readOnly" (click)="annullaAutocontrollo('VERIFICA_3')" *ngIf="choice===choiseEnum.VERIFICA_3">ANNULLA</button>
+  <button type="button" class="btn btn-link btn-annulla mr-2" [class.button-disabled]="readOnly" [disabled]="readOnly" (click)="annulla()" *ngIf="choice===choiseEnum.CHECKLIST">ANNULLA</button>
+  <button type="button" class="btn btn-outline-primary btn-s-bozza" [class.button-disabled]="readOnly || !client.checkAzioni(azioni.RUP_CUP_SCRITTURA)" [disabled]="readOnly || !client.checkAzioni(azioni.RUP_CUP_SCRITTURA)" (click)="salva('BOZZA')"
+  *ngIf="choice===choiseEnum.CHECKLIST">SALVA IN BOZZA</button>
+
+<div class="float-container" *ngIf="choice===choiseEnum.CHECKLIST">
+    <button type="button" class="btn btn-primary btn-s-compilata " [class.button-disabled]="readOnly || !client.checkAzioni(azioni.RUP_CUP_SCRITTURA)" [disabled]="readOnly || !client.checkAzioni(azioni.RUP_CUP_SCRITTURA)" (click)="salva('COMPILATA')">SALVA COMPILATA</button>
+    <!-- <button type="button" class="btn btn-primary btn-s-completata " [class.button-disabled]="readOnly || !client.checkAzioni(azioni.RUP_CUP_SCRITTURA)" [disabled]="readOnly || !client.checkAzioni(azioni.RUP_CUP_SCRITTURA)" (click)="salva('COMPLETATA')">SALVA COMPLETATA</button> -->
+    <button type="button" class="btn btn-secondary" disabled>SALVA COMPLETATA</button>
+</div>
+
+
+<div class="float-container" *ngIf="choice===choiseEnum.VERIFICA_2">
+    <button type="button" class="btn btn-primary btn-s-compilata " [class.button-disabled]="readOnly" [disabled]="readOnly" (click)="salvaAutocontrollo('VERIFICA_2')">SALVA</button>
+</div>
+<div class="float-container" *ngIf="choice===choiseEnum.VERIFICA_3">
+    <button type="button" class="btn btn-primary btn-s-compilata " [class.button-disabled]="readOnly" [disabled]="readOnly" (click)="salvaAutocontrollo('VERIFICA_3')">SALVA</button>
+</div>

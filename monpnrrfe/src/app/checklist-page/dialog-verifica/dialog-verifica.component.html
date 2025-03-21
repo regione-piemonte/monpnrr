@@ -1,0 +1,97 @@
+<h1 mat-dialog-title>Gestione Autocontrollo</h1>
+<div mat-dialog-content style="min-height: 20vh;" class="mb-1">
+  <!-- Errore -->
+  <div class="error-container w-100" *ngIf="isError">
+    <div class="row pt-4 pb-3 pr-3">
+      <div class="col-md-2" style="text-align: center;">
+        <span class="material-icons icon-error"></span>
+      </div>
+      <div class="col-md-10">
+        <p class="error-title">Messaggio di errore</p>
+        <p class="error-text" *ngFor="let error of errors">{{ error }}</p>
+
+        <!-- <p class="error-text">ATTENZIONE: Non è possibile completare l'operazione -->
+          <!-- di salvataggio, &egrave; obbligatorio inserire una nota.</p> -->
+      </div>
+    </div>
+  </div>
+  <br *ngIf="isError">
+  <!-- Body autocontrollo -->
+  <div class="card"
+    *ngIf="client.selectProfile && ['RP-verifica-liv2','RP-verifica-liv3'].includes(client.selectProfile.codice);">
+    <div class="card-body">
+      <div class="row w-100">
+        <div class="col-md-3 w-100 pr-0" style="align-content: center;">
+          <span style="font-size: 20px;">Autocontrollo:&nbsp;&nbsp;</span>
+        </div>
+        <div class="col-md-1 w-100 p-0" style="align-content: center;">
+          <ng-container
+            *ngIf="client.selectProfile && ['RP-verifica-liv3'].includes(client.selectProfile.codice); else elseTemplateAutocontrolloLivDue">
+            <ng-container *ngIf="client.autocontrolloSwap.checkboxSwap; else elseTemplateOk">
+              <span style="font-size: 18px;">Ok</span>
+            </ng-container>
+            <ng-template #elseTemplateOk>
+              <span style="font-size: 18px;">Non<br>indicato</span>
+            </ng-template>
+          </ng-container>
+          <ng-template #elseTemplateAutocontrolloLivDue>
+            <input type="checkbox" class="custom-checkbox" aria-label="Checkbox for following text input"
+              [(ngModel)]="client.autocontrolloSwap.checkboxSwap" (click)="resetNote('liv2')">&nbsp;<span style="font-size: 18px;">ok</span>
+          </ng-template>
+        </div>
+        <div class="col-md-2 w-100 pr-0 d-flex align-items-center justify-content-end"><span
+            style="font-size: 20px;">Nota:&nbsp;&nbsp;</span></div>
+        <div class="col-md-6 w-100" style="align-content: center;">
+          <textarea class="form-control" id="cupId" aria-describedby="cup"
+            [(ngModel)]="client.autocontrolloSwap.notaSwap" (input)="validateNoteText('liv2')" id="exampleFormControlTextarea1"
+            rows="1"
+            [disabled]="client.selectProfile && ['RP-verifica-liv3'].includes(client.selectProfile.codice) || !client.autocontrolloSwap.checkboxSwap"></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="card mt-3" *ngIf="client.selectProfile && ['RP-verifica-liv3'].includes(client.selectProfile.codice);">
+    <div class="card-body">
+      <div class="row w-100">
+        <div class="col-md-4 w-100" style="align-content: center;">
+          <span style="font-size: 20px;">Rp:&nbsp;&nbsp;</span>
+          <span style="font-size: 18px;">{{ ultima_modifica && ultima_modifica.utente ? ultima_modifica.utente : '-'}}</span>
+        </div>
+        <div class="col-md-2 w-100 pr-0 d-flex align-items-center justify-content-end"><span style="font-size: 20px;">In
+            data:&nbsp;&nbsp;</span></div>
+        <div class="col-md-6 w-100" style="align-content: center;">
+          <span style="font-size: 18px;">{{ ultima_modifica && ultima_modifica.data ? ultima_modifica.data : '-'}}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="card mt-3" *ngIf="client.selectProfile && ['RP-verifica-liv3'].includes(client.selectProfile.codice);">
+    <div class="card-body">
+      <div class="row w-100">
+        <div class="col-md-3 w-100 pr-0" style="align-content: center;">
+          <span style="font-size: 20px;">{{ 'Autocontrollo\ncartaceo:' }}</span>
+        </div>
+        <div class="col-md-1 w-100 p-0" style="align-content: center;">
+          <input type="checkbox" class="custom-checkbox" aria-label="Checkbox for following text input"
+            [(ngModel)]="client.autocontrolloSwap.checkboxSwapCartaceo" (click)="resetNote('liv3')">&nbsp;<span style="font-size: 18px;">ok</span>
+          <!-- <span style="font-size: 18px;">Ok</span> -->
+        </div>
+        <div class="col-md-2 w-100 pr-0 d-flex align-items-center justify-content-end"><span
+            style="font-size: 20px;">Nota:&nbsp;&nbsp;</span></div>
+        <div class="col-md-6 w-100" style="align-content: center;">
+          <textarea class="form-control" id="cupId" aria-describedby="cup"
+            [(ngModel)]="client.autocontrolloSwap.notaSwapCartaceo" (input)="validateNoteText('liv3')"
+            id="exampleFormControlTextarea1" rows="1"
+            [disabled]="!client.autocontrolloSwap.checkboxSwapCartaceo"></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<br>
+<div mat-dialog-actions>
+  <button mat-button mat-dialog-close>CHIUDI</button>
+  <button type="button" class="btn btn-outline-primary btn-s-salva mt-2 ml-auto" (click)="salvaVerifica()" [disabled]="isError">
+    SALVA
+  </button>
+</div>

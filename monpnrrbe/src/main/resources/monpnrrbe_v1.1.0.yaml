@@ -1,0 +1,1813 @@
+openapi: 3.0.1
+info:
+  title: API MONPNRRBE
+  description: Componente API MONPNRRBE del prodotto MONPNRR
+  version: 1.1.0
+servers:
+  - url: /api/v1
+tags:
+ - name: login
+ - name: progetti 
+ - name: decodifiche
+ - name: system
+ 
+paths:
+  /login:
+    get:
+      operationId: login
+      tags:
+        - login
+      description: login
+      parameters:
+      - name: Shib-Identita-CodiceFiscale
+        in: header
+        required: true
+        schema:
+          type: string
+          example: AAAAAA00B77B000F
+      - in: header
+        description: Contiene un id univoco (`uuid v4`) della chiamata HTTP che viene generato
+                     dal front-end, viene propagato agli strati successivi e viene restituito
+                     al front-end assieme alla response, permettendo così di tracciare l'intero
+                      ciclo di vita della richiesta
+        name: X-Request-Id
+        required: true
+        schema:
+          type: string
+      - in: header
+        description: Contiene una stringa identificativa del servizio chiamante (es.MONPNRR)
+        name: X-Codice-Servizio
+        required: true
+        schema:
+          type: string
+      - in: header 
+        name: X-Forwarded-For
+        required: true
+        schema:
+          type: string
+        x-example: 216.3.128.12
+      - in: query 
+        name: Token
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: SUCCESS
+          content:
+            application/json:
+              schema:
+                 $ref: '#/components/schemas/Utente'
+        '500':
+          description: INTERNAL_SERVER_ERROR
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errore'
+  /status:
+    get:
+      operationId: statusGet
+      tags:
+        - system
+      description: ping
+      parameters:
+      - name: Shib-Identita-CodiceFiscale
+        in: header
+        required: true
+        schema:
+          type: string
+          example: AAAAAA00B77B000F
+      - in: header
+        description: Contiene un id univoco (`uuid v4`) della chiamata HTTP che viene generato
+                     dal front-end, viene propagato agli strati successivi e viene restituito
+                     al front-end assieme alla response, permettendo così di tracciare l'intero
+                      ciclo di vita della richiesta
+        name: X-Request-Id
+        required: true
+        schema:
+          type: string
+      - in: header
+        description: Contiene una stringa identificativa del servizio chiamante (es.MONPNRR)
+        name: X-Codice-Servizio
+        required: true
+        schema:
+          type: string
+      - in: header 
+        name: X-Forwarded-For
+        required: true
+        schema:
+          type: string
+        x-example: 216.3.128.12
+      responses:
+        "200":
+          description: OK
+          content:
+            application/problem+json:
+              schema:
+                type: string
+        '400':
+          description: BAD_REQUEST
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errore'
+        '401':
+          description: UNAUTHORIZED
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errore'
+        '403':
+          description: FORBIDDEN
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errore'
+        '500':
+          description: INTERNAL_SERVER_ERROR
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errore'
+  /progetti/{profilo}:
+    get:
+      tags:
+        - progetti 
+      summary: Cerca tutti i progetti
+      description: ''
+      parameters:
+        - name: Shib-Identita-CodiceFiscale
+          in: header
+          required: true
+          schema:
+            type: string
+            example: AAAAAA00B77B000
+        - in: header
+          description: Contiene un id univoco (`uuid v4`) della chiamata HTTP che viene generato
+                       dal front-end, viene propagato agli strati successivi e viene restituito
+                       al front-end assieme alla response, permettendo così di tracciare l'intero
+                        ciclo di vita della richiesta
+          name: X-Request-Id
+          required: true
+          schema:
+            type: string
+        - in: header
+          description: Contiene una stringa identificativa del servizio chiamante (es.MONPNRR)
+          name: X-Codice-Servizio
+          required: true
+          schema:
+            type: string
+        - in: header 
+          name: X-Forwarded-For
+          required: true
+          schema:
+            type: string
+          x-example: 216.3.128.12
+        - name: profilo
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: cup
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: checklist
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: stato
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: modificaRupDa
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: modificaRupA
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: aziendaSanitaria
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: rua
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: rup
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: verificatoLiv2
+          in: query
+          required: false
+          schema:
+            type: boolean
+        - name: modificaVerifica2Da
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: modificaVerifica2A
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: verificatoLiv3
+          in: query
+          required: false
+          schema:
+            type: boolean
+        - name: modificaVerifica3Da
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: modificaVerifica3A
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: modificatoRupDopoVerifica
+          in: query
+          required: false
+          schema:
+            type: boolean
+        - name: modificaRupDopoVerificaDa
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: modificaRupDopoVerificaA
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: orderBy
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: descending
+          in: query
+          required: false
+          schema:
+            type: boolean
+        - name: pageNumber
+          in: query
+          required: false
+          schema:
+            type: number
+        - name: rowPerPage
+          in: query
+          required: false
+          schema:
+            type: number
+            
+      responses:
+        '200':
+          description: SUCCESS
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Progetto'
+        '400':
+          description: BAD_REQUEST
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errore'
+        '401':
+          description: UNAUTHORIZED
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errore'
+        '403':
+          description: FORBIDDEN
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errore'
+        '500':
+          description: INTERNAL_SERVER_ERROR
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errore'
+  /progetti/{progettoCup}/dettaglio/{profilo}:
+    get:
+      tags:
+        - progetti 
+      summary: Cerca il dettaglio del progetto
+      description: ''
+      parameters:
+        - name: Shib-Identita-CodiceFiscale
+          in: header
+          required: true
+          schema:
+            type: string
+            example: AAAAAA00B77B000
+        - in: header
+          description: Contiene un id univoco (`uuid v4`) della chiamata HTTP che viene generato
+                       dal front-end, viene propagato agli strati successivi e viene restituito
+                       al front-end assieme alla response, permettendo così di tracciare l'intero
+                        ciclo di vita della richiesta
+          name: X-Request-Id
+          required: true
+          schema:
+            type: string
+        - in: header
+          description: Contiene una stringa identificativa del servizio chiamante (es.MONPNRR)
+          name: X-Codice-Servizio
+          required: true
+          schema:
+            type: string
+        - in: header 
+          name: X-Forwarded-For
+          required: true
+          schema:
+            type: string
+          x-example: 216.3.128.12
+        - name: progettoCup
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: profilo
+          in: path
+          required: true
+          schema:
+            type: string
+
+      responses:
+        '200':
+          description: SUCCESS
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProgettoDettaglio'
+        '400':
+          description: BAD_REQUEST
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errore'
+        '401':
+          description: UNAUTHORIZED
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errore'
+        '403':
+          description: FORBIDDEN
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errore'
+        '500':
+          description: INTERNAL_SERVER_ERROR
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errore'
+  /progetti/{progettoCup}/checklist/{profilo}:
+    get:
+      tags:
+        - progetti 
+      summary: Cerca la checklist CUP o CIG relativa ad un determinato progetto
+      description: ''
+      parameters:
+        - name: Shib-Identita-CodiceFiscale
+          in: header
+          required: true
+          schema:
+            type: string
+            example: AAAAAA00B77B000F
+        - in: header
+          description: Contiene un id univoco (`uuid v4`) della chiamata HTTP che viene generato
+                       dal front-end, viene propagato agli strati successivi e viene restituito
+                       al front-end assieme alla response, permettendo così di tracciare l'intero
+                        ciclo di vita della richiesta
+          name: X-Request-Id
+          required: true
+          schema:
+            type: string
+        - in: header
+          description: Contiene una stringa identificativa del servizio chiamante (es.MONPNRR)
+          name: X-Codice-Servizio
+          required: true
+          schema:
+            type: string
+        - in: header 
+          name: X-Forwarded-For
+          required: true
+          schema:
+            type: string
+          x-example: 216.3.128.12
+        - name: progettoCup
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: profilo
+          in: path
+          required: true
+          schema:
+            type: string
+
+      responses:
+        '200':
+          description: SUCCESS
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChecklistProgettoList'
+        '400':
+          description: BAD_REQUEST
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errore'
+        '401':
+          description: UNAUTHORIZED
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errore'
+        '403':
+          description: FORBIDDEN
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errore'
+        '500':
+          description: INTERNAL_SERVER_ERROR
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errore'
+    put:
+      tags:
+        - progetti 
+      summary: Salva la checklist CUP o CIG relativa ad un determinato progetto
+      description: ''
+      parameters:
+        - name: Shib-Identita-CodiceFiscale
+          in: header
+          required: true
+          schema:
+            type: string
+            example: AAAAAA00B77B000F
+        - in: header
+          description: Contiene un id univoco (`uuid v4`) della chiamata HTTP che viene generato
+                       dal front-end, viene propagato agli strati successivi e viene restituito
+                       al front-end assieme alla response, permettendo così di tracciare l'intero
+                        ciclo di vita della richiesta
+          name: X-Request-Id
+          required: true
+          schema:
+            type: string
+        - in: header
+          description: Contiene una stringa identificativa del servizio chiamante (es.MONPNRR)
+          name: X-Codice-Servizio
+          required: true
+          schema:
+            type: string
+        - in: header 
+          name: X-Forwarded-For
+          required: true
+          schema:
+            type: string
+          x-example: 216.3.128.12
+        - name: progettoCup
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: profilo
+          in: path
+          required: true
+          schema:
+            type: string
+      
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChecklistRispostaList'
+
+      responses:
+        '200':
+          description: SUCCESS
+          content:
+            application/json:
+              schema:
+                type: string
+        '400':
+          description: BAD_REQUEST
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errore'
+        '401':
+          description: UNAUTHORIZED
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errore'
+        '403':
+          description: FORBIDDEN
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errore'
+        '500':
+          description: INTERNAL_SERVER_ERROR
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errore'
+  /progetti/{progettoCup}/checklist/verifica/{profilo}:
+    put:
+      tags:
+        - progetti 
+      summary: Salva la verifica della checklist CUP o CIG relativa ad un determinato progetto
+      description: ''
+      parameters:
+        - name: Shib-Identita-CodiceFiscale
+          in: header
+          required: true
+          schema:
+            type: string
+            example: AAAAAA00B77B000F
+        - in: header
+          description: Contiene un id univoco (`uuid v4`) della chiamata HTTP che viene generato
+                       dal front-end, viene propagato agli strati successivi e viene restituito
+                       al front-end assieme alla response, permettendo così di tracciare l'intero
+                        ciclo di vita della richiesta
+          name: X-Request-Id
+          required: true
+          schema:
+            type: string
+        - in: header
+          description: Contiene una stringa identificativa del servizio chiamante (es.MONPNRR)
+          name: X-Codice-Servizio
+          required: true
+          schema:
+            type: string
+        - in: header 
+          name: X-Forwarded-For
+          required: true
+          schema:
+            type: string
+          x-example: 216.3.128.12
+        - name: progettoCup
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: profilo
+          in: path
+          required: true
+          schema:
+            type: string
+      
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VerificaRispostaList'
+
+      responses:
+        '200':
+          description: SUCCESS
+          content:
+            application/json:
+              schema:
+                type: string
+        '400':
+          description: BAD_REQUEST
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errore'
+        '401':
+          description: UNAUTHORIZED
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errore'
+        '403':
+          description: FORBIDDEN
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errore'
+        '500':
+          description: INTERNAL_SERVER_ERROR
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errore'
+  /progetti/{progettoCup}/pdf/{profilo}:
+    get:
+      tags:
+        - progetti 
+      summary: Restituisce un pdf con il dettaglio della checklist di un progetto
+      description: ''
+      parameters:
+        - name: Shib-Identita-CodiceFiscale
+          in: header
+          required: true
+          schema:
+            type: string
+            example: AAAAAA00B77B000F
+        - in: header
+          description: Contiene un id univoco (`uuid v4`) della chiamata HTTP che viene generato
+                       dal front-end, viene propagato agli strati successivi e viene restituito
+                       al front-end assieme alla response, permettendo così di tracciare l'intero
+                        ciclo di vita della richiesta
+          name: X-Request-Id
+          required: true
+          schema:
+            type: string
+        - in: header
+          description: Contiene una stringa identificativa del servizio chiamante (es.MONPNRR)
+          name: X-Codice-Servizio
+          required: true
+          schema:
+            type: string
+        - in: header 
+          name: X-Forwarded-For
+          required: true
+          schema:
+            type: string
+          x-example: 216.3.128.12
+        - name: progettoCup
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: profilo
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: aziendaSanitaria
+          in: query
+          required: false
+          schema:
+            type: string
+
+      responses:
+        '200':
+          description: SUCCESS
+          headers:
+            Content-Disposition:
+              schema:
+                type: string
+              description: Nome file con estensione .pdf
+          content:
+            application/pdf:
+              schema:
+                type: string
+                format: byte
+        '400':
+          description: BAD_REQUEST
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errore'
+        '401':
+          description: UNAUTHORIZED
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errore'
+        '403':
+          description: FORBIDDEN
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errore'
+        '500':
+          description: INTERNAL_SERVER_ERROR
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errore'
+  /progetti/csv/{profilo}:
+    get:
+      tags:
+        - progetti 
+      summary: Restituisce un csv con il dettaglio delle checklist di tutti i progetti
+      description: ''
+      parameters:
+        - name: Shib-Identita-CodiceFiscale
+          in: header
+          required: true
+          schema:
+            type: string
+            example: AAAAAA00B77B000F
+        - in: header
+          description: Contiene un id univoco (`uuid v4`) della chiamata HTTP che viene generato
+                       dal front-end, viene propagato agli strati successivi e viene restituito
+                       al front-end assieme alla response, permettendo così di tracciare l'intero
+                        ciclo di vita della richiesta
+          name: X-Request-Id
+          required: true
+          schema:
+            type: string
+        - in: header
+          description: Contiene una stringa identificativa del servizio chiamante (es.MONPNRR)
+          name: X-Codice-Servizio
+          required: true
+          schema:
+            type: string
+        - in: header 
+          name: X-Forwarded-For
+          required: true
+          schema:
+            type: string
+          x-example: 216.3.128.12
+        - name: profilo
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: cup
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: checklist
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: stato
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: modificaRupDa
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: modificaRupA
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: aziendaSanitaria
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: rua
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: rup
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: verificatoLiv2
+          in: query
+          required: false
+          schema:
+            type: boolean
+        - name: modificaVerifica2Da
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: modificaVerifica2A
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: verificatoLiv3
+          in: query
+          required: false
+          schema:
+            type: boolean
+        - name: modificaVerifica3Da
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: modificaVerifica3A
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: modificatoRupDopoVerifica
+          in: query
+          required: false
+          schema:
+            type: boolean
+        - name: modificaRupDopoVerificaDa
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: modificaRupDopoVerificaA
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: orderBy
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: descending
+          in: query
+          required: false
+          schema:
+            type: boolean
+
+      responses:
+        '200':
+          description: SUCCESS
+          headers:
+            Content-Disposition:
+              schema:
+                type: string
+              description: Nome file con estensione .csv
+          content:
+            text/csv:
+              schema:
+                type: string
+                format: byte
+        '400':
+          description: BAD_REQUEST
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errore'
+        '401':
+          description: UNAUTHORIZED
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errore'
+        '403':
+          description: FORBIDDEN
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errore'
+        '500':
+          description: INTERNAL_SERVER_ERROR
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errore'
+  /decodifiche/procedure/{profilo}:
+    get:
+      tags:
+        - decodifiche 
+      summary: Restituisce le procedure
+      description: ''
+      parameters:
+        - name: Shib-Identita-CodiceFiscale
+          in: header
+          required: true
+          schema:
+            type: string
+            example: AAAAAA00B77B000F
+        - in: header
+          description: Contiene un id univoco (`uuid v4`) della chiamata HTTP che viene generato
+                       dal front-end, viene propagato agli strati successivi e viene restituito
+                       al front-end assieme alla response, permettendo così di tracciare l'intero
+                        ciclo di vita della richiesta
+          name: X-Request-Id
+          required: true
+          schema:
+            type: string
+        - in: header
+          description: Contiene una stringa identificativa del servizio chiamante (es.MONPNRR)
+          name: X-Codice-Servizio
+          required: true
+          schema:
+            type: string
+        - in: header 
+          name: X-Forwarded-For
+          required: true
+          schema:
+            type: string
+          x-example: 216.3.128.12
+        - name: profilo
+          in: path
+          required: true
+          schema:
+            type: string
+
+      responses:
+        '200':
+          description: SUCCESS
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Decodifica'
+        '400':
+          description: BAD_REQUEST
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errore'
+        '401':
+          description: UNAUTHORIZED
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errore'
+        '403':
+          description: FORBIDDEN
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errore'
+        '500':
+          description: INTERNAL_SERVER_ERROR
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errore'
+  /decodifiche/risposte/{profilo}:
+    get:
+      tags:
+        - decodifiche 
+      summary: Restituisce le risposte
+      description: ''
+      parameters:
+        - name: Shib-Identita-CodiceFiscale
+          in: header
+          required: true
+          schema:
+            type: string
+            example: AAAAAA00B77B000F
+        - in: header
+          description: Contiene un id univoco (`uuid v4`) della chiamata HTTP che viene generato
+                       dal front-end, viene propagato agli strati successivi e viene restituito
+                       al front-end assieme alla response, permettendo così di tracciare l'intero
+                        ciclo di vita della richiesta
+          name: X-Request-Id
+          required: true
+          schema:
+            type: string
+        - in: header
+          description: Contiene una stringa identificativa del servizio chiamante (es.MONPNRR)
+          name: X-Codice-Servizio
+          required: true
+          schema:
+            type: string
+        - in: header 
+          name: X-Forwarded-For
+          required: true
+          schema:
+            type: string
+          x-example: 216.3.128.12
+        - name: profilo
+          in: path
+          required: true
+          schema:
+            type: string
+
+      responses:
+        '200':
+          description: SUCCESS
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Decodifica'
+        '400':
+          description: BAD_REQUEST
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errore'
+        '401':
+          description: UNAUTHORIZED
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errore'
+        '403':
+          description: FORBIDDEN
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errore'
+        '500':
+          description: INTERNAL_SERVER_ERROR
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errore'
+  /decodifiche/cambiStato/{profilo}:
+    get:
+      tags:
+        - decodifiche 
+      summary: Restituisce i cambi stato possibili
+      description: ''
+      parameters:
+        - name: Shib-Identita-CodiceFiscale
+          in: header
+          required: true
+          schema:
+            type: string
+            example: AAAAAA00B77B000F
+        - in: header
+          description: Contiene un id univoco (`uuid v4`) della chiamata HTTP che viene generato
+                       dal front-end, viene propagato agli strati successivi e viene restituito
+                       al front-end assieme alla response, permettendo così di tracciare l'intero
+                        ciclo di vita della richiesta
+          name: X-Request-Id
+          required: true
+          schema:
+            type: string
+        - in: header
+          description: Contiene una stringa identificativa del servizio chiamante (es.MONPNRR)
+          name: X-Codice-Servizio
+          required: true
+          schema:
+            type: string
+        - in: header 
+          name: X-Forwarded-For
+          required: true
+          schema:
+            type: string
+          x-example: 216.3.128.12
+        - name: profilo
+          in: path
+          required: true
+          schema:
+            type: string
+
+      responses:
+        '200':
+          description: SUCCESS
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CambiStato'
+        '400':
+          description: BAD_REQUEST
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errore'
+        '401':
+          description: UNAUTHORIZED
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errore'
+        '403':
+          description: FORBIDDEN
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errore'
+        '500':
+          description: INTERNAL_SERVER_ERROR
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errore'
+  /decodifiche/checklist/{profilo}:
+    get:
+      tags:
+        - decodifiche 
+      summary: Restituisce le checklist
+      description: ''
+      parameters:
+        - name: Shib-Identita-CodiceFiscale
+          in: header
+          required: true
+          schema:
+            type: string
+            example: AAAAAA00B77B000F
+        - in: header
+          description: Contiene un id univoco (`uuid v4`) della chiamata HTTP che viene generato
+                       dal front-end, viene propagato agli strati successivi e viene restituito
+                       al front-end assieme alla response, permettendo così di tracciare l'intero
+                        ciclo di vita della richiesta
+          name: X-Request-Id
+          required: true
+          schema:
+            type: string
+        - in: header
+          description: Contiene una stringa identificativa del servizio chiamante (es.MONPNRR)
+          name: X-Codice-Servizio
+          required: true
+          schema:
+            type: string
+        - in: header 
+          name: X-Forwarded-For
+          required: true
+          schema:
+            type: string
+          x-example: 216.3.128.12
+        - name: profilo
+          in: path
+          required: true
+          schema:
+            type: string
+
+      responses:
+        '200':
+          description: SUCCESS
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Decodifica'
+        '400':
+          description: BAD_REQUEST
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errore'
+        '401':
+          description: UNAUTHORIZED
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errore'
+        '403':
+          description: FORBIDDEN
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errore'
+        '500':
+          description: INTERNAL_SERVER_ERROR
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errore'
+  /decodifiche/aziendaSanitaria/{profilo}:
+    get:
+      tags:
+        - decodifiche 
+      summary: Restituisce le aziende sanitarie
+      description: ''
+      parameters:
+        - name: Shib-Identita-CodiceFiscale
+          in: header
+          required: true
+          schema:
+            type: string
+            example: AAAAAA00B77B000F
+        - in: header
+          description: Contiene un id univoco (`uuid v4`) della chiamata HTTP che viene generato
+                       dal front-end, viene propagato agli strati successivi e viene restituito
+                       al front-end assieme alla response, permettendo così di tracciare l'intero
+                        ciclo di vita della richiesta
+          name: X-Request-Id
+          required: true
+          schema:
+            type: string
+        - in: header
+          description: Contiene una stringa identificativa del servizio chiamante (es.MONPNRR)
+          name: X-Codice-Servizio
+          required: true
+          schema:
+            type: string
+        - in: header 
+          name: X-Forwarded-For
+          required: true
+          schema:
+            type: string
+          x-example: 216.3.128.12
+        - name: profilo
+          in: path
+          required: true
+          schema:
+            type: string
+
+      responses:
+        '200':
+          description: SUCCESS
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Decodifica'
+        '400':
+          description: BAD_REQUEST
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errore'
+        '401':
+          description: UNAUTHORIZED
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errore'
+        '403':
+          description: FORBIDDEN
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errore'
+        '500':
+          description: INTERNAL_SERVER_ERROR
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errore'
+  /decodifiche/rua/{profilo}:
+    get:
+      tags:
+        - decodifiche 
+      summary: Restituisce i rua
+      description: ''
+      parameters:
+        - name: Shib-Identita-CodiceFiscale
+          in: header
+          required: true
+          schema:
+            type: string
+            example: AAAAAA00B77B000F
+        - in: header
+          description: Contiene un id univoco (`uuid v4`) della chiamata HTTP che viene generato
+                       dal front-end, viene propagato agli strati successivi e viene restituito
+                       al front-end assieme alla response, permettendo così di tracciare l'intero
+                        ciclo di vita della richiesta
+          name: X-Request-Id
+          required: true
+          schema:
+            type: string
+        - in: header
+          description: Contiene una stringa identificativa del servizio chiamante (es.MONPNRR)
+          name: X-Codice-Servizio
+          required: true
+          schema:
+            type: string
+        - in: header 
+          name: X-Forwarded-For
+          required: true
+          schema:
+            type: string
+          x-example: 216.3.128.12
+        - name: profilo
+          in: path
+          required: true
+          schema:
+            type: string
+
+      responses:
+        '200':
+          description: SUCCESS
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Decodifica'
+        '400':
+          description: BAD_REQUEST
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errore'
+        '401':
+          description: UNAUTHORIZED
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errore'
+        '403':
+          description: FORBIDDEN
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errore'
+        '500':
+          description: INTERNAL_SERVER_ERROR
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errore'
+  /decodifiche/rup/{profilo}:
+    get:
+      tags:
+        - decodifiche 
+      summary: Restituisce i rup
+      description: ''
+      parameters:
+        - name: Shib-Identita-CodiceFiscale
+          in: header
+          required: true
+          schema:
+            type: string
+            example: AAAAAA00B77B000F
+        - in: header
+          description: Contiene un id univoco (`uuid v4`) della chiamata HTTP che viene generato
+                       dal front-end, viene propagato agli strati successivi e viene restituito
+                       al front-end assieme alla response, permettendo così di tracciare l'intero
+                        ciclo di vita della richiesta
+          name: X-Request-Id
+          required: true
+          schema:
+            type: string
+        - in: header
+          description: Contiene una stringa identificativa del servizio chiamante (es.MONPNRR)
+          name: X-Codice-Servizio
+          required: true
+          schema:
+            type: string
+        - in: header 
+          name: X-Forwarded-For
+          required: true
+          schema:
+            type: string
+          x-example: 216.3.128.12
+        - name: profilo
+          in: path
+          required: true
+          schema:
+            type: string
+
+      responses:
+        '200':
+          description: SUCCESS
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Decodifica'
+        '400':
+          description: BAD_REQUEST
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errore'
+        '401':
+          description: UNAUTHORIZED
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errore'
+        '403':
+          description: FORBIDDEN
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errore'
+        '500':
+          description: INTERNAL_SERVER_ERROR
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errore'
+  /decodifiche/dateModifica/{profilo}:
+    get:
+      tags:
+        - decodifiche 
+      summary: Restituisce le date di modifica di default per i vari profili
+      description: ''
+      parameters:
+        - name: Shib-Identita-CodiceFiscale
+          in: header
+          required: true
+          schema:
+            type: string
+            example: AAAAAA00B77B000F
+        - in: header
+          description: Contiene un id univoco (`uuid v4`) della chiamata HTTP che viene generato
+                       dal front-end, viene propagato agli strati successivi e viene restituito
+                       al front-end assieme alla response, permettendo così di tracciare l'intero
+                        ciclo di vita della richiesta
+          name: X-Request-Id
+          required: true
+          schema:
+            type: string
+        - in: header
+          description: Contiene una stringa identificativa del servizio chiamante (es.MONPNRR)
+          name: X-Codice-Servizio
+          required: true
+          schema:
+            type: string
+        - in: header 
+          name: X-Forwarded-For
+          required: true
+          schema:
+            type: string
+          x-example: 216.3.128.12
+        - name: profilo
+          in: path
+          required: true
+          schema:
+            type: string
+
+      responses:
+        '200':
+          description: SUCCESS
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DateModifica'
+        '400':
+          description: BAD_REQUEST
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errore'
+        '401':
+          description: UNAUTHORIZED
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errore'
+        '403':
+          description: FORBIDDEN
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errore'
+        '500':
+          description: INTERNAL_SERVER_ERROR
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errore'
+components:
+  schemas:
+    Dettaglio:
+      type: object
+      properties:
+        chiave:
+          type: string
+        valore:
+          type: string
+    Errore:
+      type: object
+      properties:
+        status:
+          type: integer
+        code:
+          type: string
+        title:
+          type: string
+        detail:
+          type: array
+          items:
+           $ref: '#/components/schemas/Dettaglio'
+    UtenteSanitario:  
+      type: object
+      properties:
+        nome:
+          type: string
+        cognome:
+          type: string
+    Checklist:
+      type: object
+      properties:
+        codice:
+          type: string
+        stato:
+          type: string
+    ProgettoDettaglio:
+      type: object
+      properties:
+        checklist:
+          type: string
+        intervento:
+          type: string
+        cup:
+          type: string
+        modalita_attuativa:
+          type: string
+        azienda:
+          $ref: '#/components/schemas/Azienda'
+        rup:
+          type: array
+          items:
+            $ref: '#/components/schemas/UtenteSanitario'
+        ultima_modifica:
+          $ref: '#/components/schemas/DataUtente'
+        ultima_verifica_liv2:
+          $ref: '#/components/schemas/DataUtente'
+        ultima_verifica_liv3:
+          $ref: '#/components/schemas/DataUtente'
+        ultima_verifica:
+          $ref: '#/components/schemas/DataUtente'
+    Progetto:
+      type: object
+      properties:
+        totalCount:
+          type: number
+        cup:
+          type: string
+        descrizione:
+          type: string
+        rup:
+          type: array
+          items:
+            $ref: '#/components/schemas/UtenteSanitario'
+        rua:
+          type: array
+          items:
+            $ref: '#/components/schemas/UtenteSanitario'
+        azienda:
+          $ref: '#/components/schemas/Azienda'
+        checklist:
+          $ref: '#/components/schemas/Checklist'
+        ultima_modifica:
+          $ref: '#/components/schemas/DataUtente'
+        ultima_verifica:
+          $ref: '#/components/schemas/DataUtente'
+        modifica_recente:
+          type: boolean
+    ChecklistProgettoList:
+      properties:
+        stato:
+          type: string
+        progressivoCig:
+          type: integer
+        macrosezioni:
+          type: array
+          items: 
+            $ref: '#/components/schemas/ChecklistProgetto'
+    ChecklistProgetto:
+      type: object
+      properties:
+        macrosezione:
+          type: string
+        cig:
+          $ref: '#/components/schemas/ProceduraCig'
+        sezioni:
+          type: array
+          items: 
+           $ref: '#/components/schemas/ChecklistProgettoSezione'
+    ChecklistProgettoSezione:
+      type: object
+      properties:
+        numero:
+          type: string
+        nome:
+          type: string
+        sottosezioni:
+          type: array
+          items: 
+           $ref: '#/components/schemas/ChecklistProgettoSottosezione'
+    ChecklistProgettoSottosezione:
+      type: object
+      properties:
+        nome:
+          type: string
+        rilevazioni:
+          type: array
+          items: 
+           $ref: '#/components/schemas/ChecklistProgettoRilevazione'
+    ChecklistProgettoRilevazione:
+      type: object
+      required: [id, nome, descrizione]
+      properties:
+        rilevazione_domanda_id:
+          type: integer
+        nome:
+          type: string
+        note:
+          type: string
+        esito:
+          type: string
+        note_asr:
+          type: string
+        ultima_modifica:
+          $ref: '#/components/schemas/DataUtente'
+        esito_verifica_liv2:
+          type: boolean
+        nota_verifica_liv2:
+          type: string
+        ultima_verifica_liv2:
+          $ref: '#/components/schemas/DataUtente'
+        verificato_liv2:
+          type: boolean
+        esito_verifica_liv3:
+          type: boolean
+        nota_verifica_liv3:
+          type: string
+        ultima_verifica_liv3:
+          $ref: '#/components/schemas/DataUtente'
+        verificato_liv3:
+          type: boolean
+    ChecklistRispostaList:
+      type: object
+      properties:
+        stato:
+          type: string
+        cup:
+          type: array
+          items: 
+            $ref: '#/components/schemas/ChecklistRisposta'
+        cig:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProceduraRisposteCig'
+    VerificaRispostaList:
+      type: object
+      properties:
+        cup:
+          type: array
+          items: 
+            $ref: '#/components/schemas/VerificaRisposta'
+        cig:
+          type: array
+          items:
+            $ref: '#/components/schemas/VerificaRispostaCig'
+    ChecklistRisposta:
+      type: object
+      properties:
+        rilevazione_domanda_id:
+          type: integer
+        esito:
+          type: string
+        note_asr:
+          type: string
+    VerificaRisposta:
+      type: object
+      properties:
+        rilevazione_domanda_id:
+          type: integer
+        esito:
+          type: boolean
+        note_rp:
+          type: string
+    ProceduraCig:
+      type: object
+      properties:
+        descrizione_procedura_cig:
+          type: string
+        progressivo:
+          type: integer
+        numero_cig:
+          type: string
+    ProceduraRisposteCig:
+      allOf:     
+        - $ref: '#/components/schemas/ProceduraCig'
+        - type: object
+          required:
+            - rootCause
+      properties:
+        risposte:
+          type: array
+          items: 
+            $ref: '#/components/schemas/ChecklistRisposta'
+    VerificaRispostaCig:
+      allOf:     
+        - $ref: '#/components/schemas/ProceduraCig'
+        - type: object
+          required:
+            - rootCause
+      properties:
+        risposte:
+          type: array
+          items: 
+            $ref: '#/components/schemas/VerificaRisposta'
+    Azienda:
+      type: object
+      properties:
+        codice:
+          type: string
+        descrizione:
+          type: string
+    Decodifica:
+      type: object
+      properties:
+        codice:
+          type: string
+        descrizione:
+          type: string
+    DataUtente:
+      type: object
+      properties:
+        utente:
+          type: string
+        data:
+          type: string
+         # format: date-time
+    Utente:
+      type: object
+      properties:
+        richiedente:
+          $ref: '#/components/schemas/Persona'
+        profili:
+          type: array
+          items: 
+            $ref: '#/components/schemas/Profilo'
+    Persona:
+      type: object
+      properties:
+        codice_fiscale:
+          type: string
+        nome:
+          type: string
+        cognome:
+          type: string
+        ruolo:
+          type: string
+        collocazione:
+          $ref: '#/components/schemas/CollocazioneAzienda'
+    CollocazioneAzienda:
+      type: object
+      properties:
+        codice_collocazione:
+          type: string
+        descrizione_collocazione:
+          type: string
+        codice_azienda:
+          type: string
+        descrizione_azienda:
+          type: string
+    Profilo:
+      type: object
+      properties:
+        codice:
+          type: string
+        descrizione:
+          type: string
+        azioni:
+          type: array
+          items: 
+            $ref: '#/components/schemas/Azione'
+    Azione:
+      type: object
+      properties:
+        codice:
+          type: string
+        descrizione:
+          type: string
+    Stato:
+      type: object
+      properties:
+        statoCod:
+          type: string
+        statoDesc:
+          type: string
+        statoOrdinamento:
+          type: integer
+    CambiStato:
+      allOf:     
+        - $ref: '#/components/schemas/Stato'
+        - type: object
+          required:
+            - rootCause
+      properties:
+        altriStati:
+          type: array
+          items: 
+            $ref: '#/components/schemas/Stato'
+    DateModifica:
+      type: object
+      properties:
+        modificaRupDa:
+          type: string
+        modificaRupA:
+          type: string
+        modificaAutocontrolloLiv2Da:
+          type: string
+        modificaAutocontrolloLiv2A:
+          type: string
+        modificaAutocontrolloLiv3Da:
+          type: string
+        modificaAutocontrolloLiv3A:
+          type: string
+        
+        
+          
+        

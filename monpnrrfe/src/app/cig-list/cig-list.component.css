@@ -1,0 +1,74 @@
+.table {
+  margin-bottom: 0;
+}
+
+.table__header {
+  text-align: left;
+  font: normal normal bold 16px/20px Open Sans;
+  letter-spacing: 0px;
+  color: #000000;
+  opacity: 1;
+}
+
+.table__row {
+  text-align: left;
+  font: normal normal normal 14px/20px Open Sans;
+  letter-spacing: 0px;
+  color: #000000;
+  opacity: 1;
+}
+
+.label__CIG,.label__Procedura {
+  text-align: left;
+  font: normal normal normal 14px/19px Open Sans;
+  letter-spacing: 0.16px;
+  color: #000000;
+  opacity: 1
+}
+
+.input__CIG {
+  background: #FFFFFF 0% 0% no-repeat padding-box;
+  border: 1px solid #DEE2E6;
+  border-radius: 3px;
+  opacity: 1;
+}
+
+.label__CIG--Add {
+  text-align: left;
+  font: normal normal bold 16px/22px Open Sans;
+  letter-spacing: 0px;
+  color: #016CB4;
+  opacity: 1;
+}
+
+.label__CIG--Add:disabled {
+  color: gray; /* Colore di sfondo grigio */
+  color: #6c757d; /* Colore del testo grigio */
+}
+
+
+.transparent-btn {
+  background-color: transparent;
+  border: none;
+  padding: 0;
+  text-align: left;
+  font: normal normal bold 16px/22px Open Sans;
+  letter-spacing: 0px;
+  color: #016CB4;
+  opacity: 1;
+}
+
+.transparent-btn:disabled {
+  color: gray; /* Colore di sfondo grigio */
+}
+
+.icon-error {
+  color: red;
+  font-weight: bold;
+}
+
+.style-tooltip{
+  color: #0381d6;
+  background: #0381d6 !important;
+  font-size: 14px;
+}

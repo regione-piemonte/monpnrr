@@ -1,0 +1,146 @@
+<div class="col-8">
+  <div class="mt-3"
+    *ngIf="client.selectProfile && !['RP-verifica-liv2','RP-verifica-liv3'].includes(client.selectProfile.codice)">
+    <form [formGroup]="myForm" class="d-flex flex-column">
+      <div class="d-flex flex-row align-items-start">
+        <div class="form-group mr-3">
+          <label for="cig">CODICE CIG</label>
+          <input type="text" formControlName="numerocig" class="form-control input__CIG" id="cig"
+            placeholder="Inserisci CIG">
+        </div>
+        <div class="form-group mr-3">
+          <label for="procedura">PROCEDURA</label>
+          <select id="procedura" formControlName="descrizione" class="form-control">
+            <option value="" selected disabled hidden>Seleziona procedura</option>
+            <ng-container *ngFor="let procedure of listaProcedure; let i = index">
+              <option value="{{ procedure.codice }}">{{ procedure.descrizione }}</option>
+            </ng-container>
+          </select>
+        </div>
+        <div class="form-group">
+          <br>
+          <button class="btn transparent-btn ml-3 mt-3" [disabled]="!myForm.valid || client.modality === 'readOnly'"
+            (click)="addCig()">AGGIUNGI +</button>
+        </div>
+      </div>
+    </form>
+  </div>
+  <ng-container
+    *ngIf="cigList && cigList.length >0 && client.selectProfile && !['RP-verifica-liv2','RP-verifica-liv3'].includes(client.selectProfile.codice)">
+    <div class="mt-4 ml-3">
+      <div class="row">
+        <div>
+          <table class="table table-bordered">
+            <thead>
+              <tr>
+                <th class="table__header" scope="col">CODICE CIG</th>
+                <th scope="col">PROCEDURA</th>
+                <th scope="col">AZIONI</th>
+                <th scope="col"></th>
+              </tr>
+            </thead>
+            <tbody>
+              <ng-container *ngFor="let cigs of cigList">
+                <tr class="table__row" *ngIf="cigs.cig">
+                  <td>{{cigs.cig.numero_cig}}</td>
+                  <td>{{cigs.cig.descrizione_procedura_cig}}</td>
+                  <td>
+                    <ng-container *ngIf="stato === 'DA COMPILARE'">
+                      <img class="img-fluid occhio" src="assets/img/OcchioGrigio.svg"
+                        alt="Checklist non ancora disponibile">
+                      <img class="img-fluid ml-2 matita" (click)="editCig(cigs.cig)" src="assets/img/MatitaBlu.svg"
+                        alt="Compila/Modifica checklist">
+                      <img class="img-fluid ml-2 mr-3 cestino" (click)="deleteCig(cigs.cig)"
+                        src="assets/img/CestinoBlu.svg" alt="Elimina CIG">
+                    </ng-container>
+                    <!-- If not stato DA COMPILARE -->
+                    <ng-container *ngIf="stato !== 'DA COMPILARE'">
+                      <img class="img-fluid occhio" (click)="showCig(cigs.cig)" src="assets/img/OcchioBlu.svg"
+                        alt="Checklist non ancora disponibile">
+                      <!-- If stato >= COMPLETATA -->
+                      <ng-container
+                        *ngIf="checkModificaStatoCompletata(stato) && client.modality === 'edit'; else elseTemplate">
+                        <img class="img-fluid ml-2 matita" src="assets/img/MatitaGrigia.svg"
+                          alt="Compila/Modifica checklist">
+                        <img class="img-fluid ml-2 mr-3 cestino" src="assets/img/CestinoGrigio.svg" alt="Elimina CIG">
+                      </ng-container>
+                      <!-- If stato < COMPLETATA -->
+                      <ng-template #elseTemplate>
+                        <ng-container
+                          *ngIf="client.checkAzioni(azioni.RUP_CUP_SCRITTURA) && client.modality === 'edit'; else elseTemplateAzione">
+                          <img class="img-fluid ml-2 matita" (click)="editCig(cigs.cig)" src="assets/img/MatitaBlu.svg"
+                            alt="Compila/Modifica checklist">
+                          <!-- If esiste almeno una verifica -->
+                          <ng-container *ngIf="!checkExistVerifica(cigs); else elseTemplateCestino">
+                            <img class="img-fluid ml-2 mr-3 cestino" (click)="deleteCig(cigs.cig)" src="assets/img/CestinoBlu.svg" alt="Elimina CIG">
+                          </ng-container>
+                          <ng-template #elseTemplateCestino>
+                            <img class="img-fluid ml-2 mr-3 cestino"  src="assets/img/CestinoGrigio.svg" alt="Elimina CIG" matTooltip="Non è possibile eliminare la coppia codice Cig/Procedura perchè è stata effettuata almeno una verifica." matTooltipPosition="above"
+                            matTooltipClass="style-tooltip">
+                          </ng-template>
+                        </ng-container>
+                        <ng-template #elseTemplateAzione>
+                          <img class="img-fluid ml-2 matita" src="assets/img/MatitaGrigia.svg"
+                            alt="Compila/Modifica checklist">
+                          <img class="img-fluid ml-2 mr-3 cestino" src="assets/img/CestinoGrigio.svg" alt="Elimina CIG">
+                        </ng-template>
+                      </ng-template>
+                    </ng-container>
+                  </td>
+                  <td>
+                    <span *ngIf="checkError(cigs.cig.progressivo)" class="material-icons ml-2 icon-error"> highlight_off
+                    </span>
+                  </td>
+                </tr>
+              </ng-container>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+  <ng-container *ngIf="cigList && cigList.length <= 0">
+    <p class="ml-2" style="font-size: 18px;">Nessuna documentazione CIG.</p>
+  </ng-container>
+  <ng-container
+    *ngIf="cigList && cigList.length >0 && client.selectProfile && ['RP-verifica-liv2','RP-verifica-liv3'].includes(client.selectProfile.codice)">
+    <div class="mt-4 ml-3">
+      <div class="row">
+        <div>
+          <table class="table table-bordered">
+            <thead>
+              <tr>
+                <th class="table__header" scope="col">CODICE CIG</th>
+                <th scope="col">PROCEDURA</th>
+                <th scope="col">AZIONI</th>
+                <th scope="col"></th>
+              </tr>
+            </thead>
+            <tbody>
+              <ng-container *ngFor="let cigs of cigList">
+                <tr class="table__row" *ngIf="cigs.cig">
+                  <td>{{cigs.cig.numero_cig}}</td>
+                  <td>{{cigs.cig.descrizione_procedura_cig}}</td>
+                  <td class="text-md-center">
+                    <ng-container *ngIf="client.modality === 'readOnly'; else elseTemplate">
+                      <img class="img-fluid occhio" (click)="showCig(cigs.cig)" src="assets/img/OcchioBlu.svg"
+                        alt="Checklist non ancora disponibile">
+                    </ng-container>
+                    <ng-template #elseTemplate>
+                      <img class="img-fluid ml-2 matita" (click)="editCigAutocontrollo(cigs.cig)"
+                        src="assets/img/MatitaBlu.svg" alt="Compila/Modifica autocontrollo">
+                    </ng-template>
+                  </td>
+                  <td>
+                    <span *ngIf="checkError(cigs.cig.progressivo)" class="material-icons ml-2 icon-error"> highlight_off
+                    </span>
+                  </td>
+                </tr>
+              </ng-container>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+</div>

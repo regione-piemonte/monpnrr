@@ -1,0 +1,33 @@
+.spin-emitter-style {
+  width: 3rem;
+  height: 3rem;
+}
+
+.example-radio-group {
+  display: flex;
+  flex-direction: column;
+  margin: 15px 0;
+  align-items: flex-start;
+}
+
+.example-radio-button {
+  margin: 5px;
+}
+
+.button-disabled {
+  opacity: 60%;
+}
+.btn-s-login {
+  display: inline-block;
+  margin-right: 15px;
+  padding-left: 50px;
+  padding-right: 50px;
+  background: #005CA9 0% 0% no-repeat padding-box;
+  border: 2px solid #005CA9;
+  font-weight: 500;
+  border-radius: 3px;
+  opacity: 1;
+  letter-spacing: 0px;
+  color: #FFFFFF;
+}
+

@@ -1,0 +1,502 @@
+<!-- <div style="margin-right: 10rem; margin-left: 5rem;"> -->
+<div class="d-flex justify-content-center" *ngIf="isSpinEmitter">
+  <div class="spinner-border text-primary spin-emitter-style" role="status">
+    <span class="sr-only">Loading...</span>
+  </div>
+</div>
+<ng-container *ngIf="!isSpinEmitter">
+  <p class="project__title"><strong>Elenco progetti</strong></p>
+  <br>
+  <p class="asl__title"><strong>Collocazione: {{aziendaNominativo}}</strong></p>
+
+  <checklist-error *ngIf="!isValidInput" [isWarning]="isWarning" [errorText]="errorText"
+    class="w-100"></checklist-error>
+  <br *ngIf="!isValidInput">
+
+  <!-- PANNELLO FILTRI DI RICERCA -->
+  <br *ngIf="client.checkFiltriDiRicerca()">
+  <div class="card" *ngIf="client.checkFiltriDiRicerca()">
+    <div class="card-body">
+      <div class="row">
+        <div class="col-auto">
+          <p class="card-title">
+            <span style="font-size: 24px;color: black;"><strong>Filtri di ricerca</strong></span>
+          </p>
+        </div>
+      </div>
+      <br>
+      <div class="row w-100"
+        *ngIf="client.checkAzioni(action_search.RICERCA_CUP) || client.checkAzioni(action_search.RICERCA_AZIENDA_SANITARIA)">
+        <div [class]="labelStyle" *ngIf="client.checkAzioni(action_search.RICERCA_CUP)">
+          CUP
+        </div>
+        <div [class]="inputStyle" *ngIf="client.checkAzioni(action_search.RICERCA_CUP)">
+          <input type="text" class="form-control w-100" id="cupId" aria-describedby="cup" [(ngModel)]="cupText"
+            (input)="validateCupText()">
+        </div>
+        <div [class]="labelStyle" *ngIf="client.checkAzioni(action_search.RICERCA_AZIENDA_SANITARIA)">
+          Azienda Sanitaria
+        </div>
+        <div [class]="inputStyle" *ngIf="client.checkAzioni(action_search.RICERCA_AZIENDA_SANITARIA)">
+          <select class="form-control" id="aziendaSanitariaId" [(ngModel)]="selectedAziendaSanitaria">
+            <option [ngValue]="aziendaSanitariaVuoto" selected></option>
+            <option *ngFor="let a of client.listaDecodificaAziendaSanitaria" [ngValue]="a">{{ a.descrizione }}</option>
+          </select>
+        </div>
+      </div>
+      <div class="row w-100 mt-3"
+        *ngIf="client.checkAzioni(action_search.RICERCA_RUP) || client.checkAzioni(action_search.RICERCA_RUA)">
+        <div [class]="labelStyle" *ngIf="client.checkAzioni(action_search.RICERCA_RUP)">
+          RUP
+        </div>
+        <div [class]="inputStyle" *ngIf="client.checkAzioni(action_search.RICERCA_RUP)">
+          <select class="form-control" id="rupId" [(ngModel)]="selectedRup">
+            <option [ngValue]="rupVuoto" selected></option>
+            <option *ngFor="let a of client.listaDecodificaRup" [ngValue]="a">{{ a.descrizione }}</option>
+          </select>
+        </div>
+        <div [class]="labelStyle" *ngIf="client.checkAzioni(action_search.RICERCA_RUA)">
+          RUA
+        </div>
+        <div [class]="inputStyle" *ngIf="client.checkAzioni(action_search.RICERCA_RUA)">
+          <select class="form-control" id="ruaId" [(ngModel)]="selectedRua">
+            <option [ngValue]="ruaVuoto" selected></option>
+            <option *ngFor="let a of client.listaDecodificaRua" [ngValue]="a">{{ a.descrizione }}</option>
+          </select>
+        </div>
+      </div>
+      <div class="row w-100 mt-3"
+        *ngIf="client.checkAzioni(action_search.RICERCA_CHECKLIST) || client.checkAzioni(action_search.RICERCA_CHECKLIST_STATO)">
+        <div [class]="labelStyle" *ngIf="client.checkAzioni(action_search.RICERCA_CHECKLIST)">
+          Checklist
+        </div>
+        <div [class]="inputStyle" *ngIf="client.checkAzioni(action_search.RICERCA_CHECKLIST)">
+          <select class="form-control" id="checklistId" [(ngModel)]="selectedChecklist">
+            <option [ngValue]="checklistVuoto" selected></option>
+            <option *ngFor="let a of client.listaDecodificaChecklist" [ngValue]="a">{{ a.descrizione }}</option>
+          </select>
+        </div>
+        <div [class]="labelStyle" *ngIf="client.checkAzioni(action_search.RICERCA_CHECKLIST_STATO)">
+          <span class="text-rigth">Stato&nbsp;</span>
+          <br>
+          <span class="text-rigth">checklist</span>
+        </div>
+        <div [class]="inputStyle" *ngIf="client.checkAzioni(action_search.RICERCA_CHECKLIST_STATO)">
+          <select class="form-control" id="statoChecklistId" [(ngModel)]="selectedStatoChecklist">
+            <option [ngValue]="statoChecklistVuoto" selected></option>
+            <option *ngFor="let a of client.listaDecodificaStatoChecklist" [ngValue]="a">{{ a.descrizione }}</option>
+          </select>
+        </div>
+      </div>
+      <div class="row w-100 mt-3"
+        *ngIf="client.checkAzioni(action_search.RICERCA_CHECKLIST_DATA_MODIFICA) || client.checkAzioni(action_search.RICERCA_CHECKLIST_DATA_MODIFICA)">
+        <div [class]="labelStyle" *ngIf="client.checkAzioni(action_search.RICERCA_CHECKLIST_DATA_MODIFICA)">
+          Modifica da
+        </div>
+        <div [class]="inputStyle" *ngIf="client.checkAzioni(action_search.RICERCA_CHECKLIST_DATA_MODIFICA)">
+          <div class="input-group w-100 d-flex align-items-center justify-content-center text-center">
+            <input class="form-control" placeholder="dd/mm/yyyy" name="dp" [(ngModel)]="modificaDa" ngbDatepicker
+              #modificaDaToggle="ngbDatepicker" id="modificaDaId" [footerTemplate]="footerTemplateModificaDa">
+            <div class="input-group-append">
+              <button class="btn btn-outline-primary" (click)="modificaDaToggle.toggle()" type="button">
+                <em class="bi bi-calendar3" style="font-size:  1rem;"></em>
+              </button>
+            </div>
+          </div>
+          <ng-template #footerTemplateModificaDa>
+            <hr class="my-0">
+            <button class="btn btn-secondary btn-sm m-2 float-left"
+              (click)="eraseData('modificaDa'); modificaDaToggle.close()">CANCELLA</button>
+          </ng-template>
+        </div>
+        <div [class]="labelStyle" *ngIf="client.checkAzioni(action_search.RICERCA_CHECKLIST_DATA_MODIFICA)">
+          a
+        </div>
+        <div [class]="inputStyle" *ngIf="client.checkAzioni(action_search.RICERCA_CHECKLIST_DATA_MODIFICA)">
+          <div class="input-group w-100 d-flex align-items-center justify-content-center text-center">
+            <input class="form-control" placeholder="dd/mm/yyyy" name="dp" [(ngModel)]="modificaA" ngbDatepicker
+              #modificaAToggle="ngbDatepicker" id="modificaDaId" [footerTemplate]="footerTemplateModificaA">
+            <div class="input-group-append">
+              <button class="btn btn-outline-primary" (click)="modificaAToggle.toggle()" type="button">
+                <em class="bi bi-calendar3" style="font-size:  1rem;"></em>
+              </button>
+            </div>
+          </div>
+          <ng-template #footerTemplateModificaA>
+            <hr class="my-0">
+            <button class="btn btn-secondary btn-sm m-2 float-left"
+              (click)="eraseData('modificaA'); modificaAToggle.close()">CANCELLA</button>
+          </ng-template>
+        </div>
+      </div>
+      <div class="row w-100 mt-3" *ngIf="client.checkAzioni(action_search.RICERCA_VERIFICA_LIV_DUE)">
+        <div [class]="labelStyle" *ngIf="client.checkAzioni(action_search.RICERCA_VERIFICA_LIV_DUE)">
+          Autocontrollo<br>(livello 2)
+        </div>
+        <div [class]="inputStyle" *ngIf="client.checkAzioni(action_search.RICERCA_VERIFICA_LIV_DUE)">
+          <div class="input-group w-100 d-flex align-items-center justify-content-center text-center">
+            <input type="checkbox" aria-label="Checkbox for following text input" [(ngModel)]="siLiv2"
+              (ngModelChange)="siToggle('siLiv2')">&nbsp;<span class="mr-4">Si</span>
+            <input class="form-control" placeholder="dd/mm/yyyy" name="dp" [(ngModel)]="verificaLivelloDueDa"
+              ngbDatepicker #verificaLivelloDueDaToggle="ngbDatepicker" id="modificaDaId"
+              [footerTemplate]="footerTemplateVerificaLivelloDueDa" [disabled]="!siLiv2">
+            <div class="input-group-append">
+              <button class="btn btn-outline-primary" (click)="verificaLivelloDueDaToggle.toggle()" type="button">
+                <em class="bi bi-calendar3" style="font-size:  1rem;"></em>
+              </button>
+            </div>
+          </div>
+          <ng-template #footerTemplateVerificaLivelloDueDa>
+            <hr class="my-0">
+            <button class="btn btn-secondary btn-sm m-2 float-left"
+              (click)="eraseData('verificaLivelloDueDa'); verificaLivelloDueDaToggle.close()">CANCELLA</button>
+          </ng-template>
+        </div>
+        <div [class]="labelStyle" *ngIf="client.checkAzioni(action_search.RICERCA_VERIFICA_LIV_DUE)">
+          a
+        </div>
+        <div [class]="inputStyle" *ngIf="client.checkAzioni(action_search.RICERCA_VERIFICA_LIV_DUE)">
+          <div class="input-group w-100 d-flex align-items-center justify-content-center text-center">
+            <input class="form-control" placeholder="dd/mm/yyyy" name="dp" [(ngModel)]="verificaLivelloDueA"
+              ngbDatepicker #verificaLivelloDueAToggle="ngbDatepicker" id="modificaDaId"
+              [footerTemplate]="footerTemplateVerificaLivelloDueA" [disabled]="!siLiv2">
+            <div class="input-group-append">
+              <button class="btn btn-outline-primary" (click)="verificaLivelloDueAToggle.toggle()" type="button">
+                <em class="bi bi-calendar3" style="font-size:  1rem;"></em>
+              </button>
+            </div>
+          </div>
+          <ng-template #footerTemplateVerificaLivelloDueA>
+            <hr class="my-0">
+            <button class="btn btn-secondary btn-sm m-2 float-left"
+              (click)="eraseData('verificaLivelloDueA'); verificaLivelloDueAToggle.close()">CANCELLA</button>
+          </ng-template>
+        </div>
+      </div>
+      <div class="row w-100 mt-3" *ngIf="client.checkAzioni(action_search.RICERCA_VERIFICA_LIV_TRE)">
+        <div [class]="labelStyle" *ngIf="client.checkAzioni(action_search.RICERCA_VERIFICA_LIV_TRE)">
+          Autocontrollo<br>(livello 3)
+        </div>
+        <div [class]="inputStyle" *ngIf="client.checkAzioni(action_search.RICERCA_VERIFICA_LIV_TRE)">
+          <div class="input-group w-100 d-flex align-items-center justify-content-center text-center">
+            <input type="checkbox" aria-label="Checkbox for following text input" [(ngModel)]="siLiv3"
+              (ngModelChange)="siToggle('siLiv3')">&nbsp;<span class="mr-4">Si</span>
+            <input class="form-control" placeholder="dd/mm/yyyy" name="dp" [(ngModel)]="verificaLivelloTreDa"
+              ngbDatepicker #verificaLivelloTreDaToggle="ngbDatepicker" id="modificaDaId"
+              [footerTemplate]="footerTemplateVerificaLivelloTreDa" [disabled]="!siLiv3">
+            <div class="input-group-append">
+              <button class="btn btn-outline-primary" (click)="verificaLivelloTreDaToggle.toggle()" type="button">
+                <em class="bi bi-calendar3" style="font-size:  1rem;"></em>
+              </button>
+            </div>
+          </div>
+          <ng-template #footerTemplateVerificaLivelloTreDa>
+            <hr class="my-0">
+            <button class="btn btn-secondary btn-sm m-2 float-left"
+              (click)="eraseData('verificaLivelloTreDa'); verificaLivelloTreDaToggle.close()">CANCELLA</button>
+          </ng-template>
+        </div>
+        <div [class]="labelStyle" *ngIf="client.checkAzioni(action_search.RICERCA_VERIFICA_LIV_TRE)">
+          a
+        </div>
+        <div [class]="inputStyle" *ngIf="client.checkAzioni(action_search.RICERCA_VERIFICA_LIV_TRE)">
+          <div class="input-group w-100 d-flex align-items-center justify-content-center text-center">
+            <input class="form-control" placeholder="dd/mm/yyyy" name="dp" [(ngModel)]="verificaLivelloTreA"
+              ngbDatepicker #verificaLivelloTreAToggle="ngbDatepicker" id="modificaDaId"
+              [footerTemplate]="footerTemplateVerificaLivelloTreA" [disabled]="!siLiv3">
+            <div class="input-group-append">
+              <button class="btn btn-outline-primary" (click)="verificaLivelloTreAToggle.toggle()" type="button">
+                <em class="bi bi-calendar3" style="font-size:  1rem;"></em>
+              </button>
+            </div>
+          </div>
+          <ng-template #footerTemplateVerificaLivelloTreA>
+            <hr class="my-0">
+            <button class="btn btn-secondary btn-sm m-2 float-left"
+              (click)="eraseData('verificaLivelloTreA'); verificaLivelloTreAToggle.close()">CANCELLA</button>
+          </ng-template>
+        </div>
+      </div>
+      <div class="row w-100 mt-3" *ngIf="client.checkAzioni(action_search.RICERCA_CHECKLIST_DATA_MODIFICA_RUP)">
+        <div [class]="labelStyle" *ngIf="client.checkAzioni(action_search.RICERCA_CHECKLIST_DATA_MODIFICA_RUP)">
+          Modifica da RUP dopo<br>un autocontrollo
+        </div>
+        <div [class]="inputStyle" *ngIf="client.checkAzioni(action_search.RICERCA_CHECKLIST_DATA_MODIFICA_RUP)">
+          <div class="input-group w-100 d-flex align-items-center justify-content-center text-center">
+            <input type="checkbox" aria-label="Checkbox for following text input" [(ngModel)]="siModificaRup"
+              (ngModelChange)="siToggle('siModificaRup')">&nbsp;<span class="mr-4">Si</span>
+            <input class="form-control" placeholder="dd/mm/yyyy" name="dp" [(ngModel)]="modificaDaRup" ngbDatepicker
+              #modificaDaRupToggle="ngbDatepicker" id="modificaDaId" [footerTemplate]="footerTemplateModificaDaRup"
+              [disabled]="!siModificaRup">
+            <div class="input-group-append">
+              <button class="btn btn-outline-primary" (click)="modificaDaRupToggle.toggle()" type="button">
+                <em class="bi bi-calendar3" style="font-size:  1rem;"></em>
+              </button>
+            </div>
+          </div>
+          <ng-template #footerTemplateModificaDaRup>
+            <hr class="my-0">
+            <button class="btn btn-secondary btn-sm m-2 float-left"
+              (click)="eraseData('modificaDaRup'); modificaDaRupToggle.close()">CANCELLA</button>
+          </ng-template>
+        </div>
+        <div [class]="labelStyle" *ngIf="client.checkAzioni(action_search.RICERCA_CHECKLIST_DATA_MODIFICA_RUP)">
+          a
+        </div>
+        <div [class]="inputStyle" *ngIf="client.checkAzioni(action_search.RICERCA_CHECKLIST_DATA_MODIFICA_RUP)">
+          <div class="input-group w-100 d-flex align-items-center justify-content-center text-center">
+            <input class="form-control" placeholder="dd/mm/yyyy" name="dp" [(ngModel)]="modificaDaRupA" ngbDatepicker
+              #modificaDaRupAToggle="ngbDatepicker" id="modificaDaId" [footerTemplate]="footerTemplateModificaDaRupA"
+              [disabled]="!siModificaRup">
+            <div class="input-group-append">
+              <button class="btn btn-outline-primary" (click)="modificaDaRupAToggle.toggle()" type="button">
+                <em class="bi bi-calendar3" style="font-size:  1rem;"></em>
+              </button>
+            </div>
+          </div>
+          <ng-template #footerTemplateModificaDaRupA>
+            <hr class="my-0">
+            <button class="btn btn-secondary btn-sm m-2 float-left"
+              (click)="eraseData('modificaDaRupA'); modificaDaRupAToggle.close()">CANCELLA</button>
+          </ng-template>
+        </div>
+        <div class="col-md-2"></div>
+      </div>
+      <div class="row w-100 mt-3 d-flex flex-row-reverse">
+        <div class="col-md-2 w-100">
+          <button type="button" class="btn btn-primary w-100" (click)="cercaButton()"
+            [class.button-disabled]="!isValidInput" [class.btn-s-cerca]="isValidInput"
+            [disabled]="!isValidInput">CERCA</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <br>
+
+  <p class="generic_font_16">Progetti di cui sei responsabile</p>
+  <br>
+  <p>
+    <span *ngIf="listaProgetti && listaProgetti.length > 0" class="generic_font_16">
+      <strong>{{collectionSize}}</strong> risultati &nbsp;
+    </span>
+    <span class="generic_font_13"
+      *ngIf="checkModificaCensita && client.selectProfile && ['RP-checklist','RP-verifica-liv2','RP-verifica-liv3'].includes(client.selectProfile.codice)">(*)
+      indica che dopo l'ultima modifica fatta dal RUP sono state verificate una o più risposte.</span>
+  </p>
+  <br>
+  <ng-container *ngIf="listaProgetti && listaProgetti.length > 0">
+    <table class="table table_style table-borderless w-100">
+      <thead>
+        <tr>
+          <th *ngFor="let column of columns" style="vertical-align: super;" (click)="onHeaderClick(column)"
+            class="test-nowrap">
+            <span class="generic_font_16"><strong>{{ column }}</strong></span>
+            <ng-container *ngIf="selectedColumn === column && !['', 'Azioni'].includes(column)">
+              <em class="bi bi-arrow-up-short m-0 p-0" *ngIf="!descending" style="font-size: 1.1rem;"></em>
+              <em class="bi bi-arrow-down-short m-0 p-0" *ngIf="descending" style="font-size: 1.1rem;"></em>
+            </ng-container>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <div class="d-flex justify-content-center" *ngIf="isSpinEmitterTable">
+          <div class="spinner-border text-primary spin-emitter-style" role="status">
+            <span class="sr-only">Loading...</span>
+          </div>
+        </div>
+        <!-- <div class="d-flex justify-content-center" *ngIf="isSpinEmitterTable">
+          <tr>
+            <td>
+              <div class="spinner-grow text-primary spin-emitter-style" role="status">
+                <span class="sr-only">Loading...</span>
+              </div>
+            </td>
+            <td>
+              <div class="spinner-grow text-primary spin-emitter-style" role="status">
+                <span class="sr-only">Loading...</span>
+              </div>
+            </td>
+            <td>
+              <div class="spinner-grow text-primary spin-emitter-style" role="status">
+                <span class="sr-only">Loading...</span>
+              </div>
+            </td>
+          </tr>
+        </div> -->
+        <ng-container *ngIf="!isSpinEmitterTable">
+          <ng-container *ngFor="let progetto of listaProgetti; let i = index">
+            <tr>
+              <td colspan="13" class="p-0 m-0">
+                <hr class="mx-2 p-0 m-0">
+              </td>
+            </tr>
+            <tr>
+              <!-- CUP -->
+              <td class="generic_font_13" style="vertical-align: middle;">{{ progetto.cup ? progetto.cup : '' }}</td>
+              <!-- DESCRIZIONE -->
+              <td class="generic_font_13" colspan="3" style="vertical-align: middle;">{{ progetto.descrizione ?
+                progetto.descrizione : '...' }}
+              </td>
+              <!-- AS -->
+              <td class="generic_font_13" style="vertical-align: middle;"
+                *ngIf="client.selectProfile && progetto.azienda && ['RP-checklist','RP-verifica-liv2','RP-verifica-liv3'].includes(client.selectProfile.codice)">
+                <span *ngIf="progetto.azienda" class="text-nowrap">
+                  {{ progetto.azienda.codice ? progetto.azienda.codice : ''}} <br> {{ progetto.azienda.descrizione ?
+                  progetto.azienda.descrizione : ''}}
+                </span>
+              </td>
+              <!-- RUA -->
+              <td class="generic_font_13" style="vertical-align: middle;" *ngIf="progetto.rua">
+                <span *ngFor="let rua of progetto.rua" class="text-nowrap">
+                  {{ rua.cognome ? rua.cognome : '...'}} {{ rua.nome ? rua.nome : '...' }}
+                  <br *ngIf="progetto.rua.length > 1">
+                </span>
+              </td>
+              <!-- RUP -->
+              <td class="generic_font_13" style="vertical-align: middle;"
+                *ngIf="client.selectProfile && progetto.rup && ['RP-checklist','RP-verifica-liv2','RP-verifica-liv3'].includes(client.selectProfile.codice)">
+                <span *ngFor="let rup of progetto.rup" class="text-nowrap">
+                  {{ rup.cognome ? rup.cognome : '...'}} {{ rup.nome ? rup.nome : '...' }}
+                  <br *ngIf="progetto.rup.length > 1">
+                </span>
+              </td>
+              <!-- CHECKLIST -->
+              <td class="generic_font_13" style="vertical-align: middle;"><span *ngIf="progetto.checklist">{{
+                  progetto.checklist.codice ? progetto.checklist.codice : '...' }}</span>
+              </td>
+              <!-- STATO -->
+              <td class="generic_font_13" style="vertical-align: middle;"><span *ngIf="progetto.checklist"
+                  class="text-nowrap">{{ progetto.checklist.stato ? progetto.checklist.stato
+                  : '...' }}</span></td>
+              <!-- ULTIMA MODIFICA -->
+              <td class="generic_font_13 text-nowrap" style="vertical-align: middle; text-align: center;">
+                <ng-container *ngIf="progetto.checklist && progetto.checklist.stato === 'DA COMPILARE'">
+                  <span>...</span>
+                </ng-container>
+                <ng-container *ngIf="progetto.checklist && progetto.checklist.stato !== 'DA COMPILARE'">
+                  <span
+                    *ngIf="progetto.ultima_modifica && progetto.ultima_modifica.utente && progetto.ultima_modifica.data">
+                    {{ progetto.ultima_modifica.utente }} <br> {{ progetto.ultima_modifica.data }}
+                  </span>
+                  <span
+                    *ngIf="!progetto.ultima_modifica || !progetto.ultima_modifica.utente || !progetto.ultima_modifica.data">...</span>
+                </ng-container>
+              </td>
+              <!-- ULTIMA VERIFICA -->
+              <td class="generic_font_13 text-nowrap" style="vertical-align: middle; text-align: center;"
+                *ngIf="client.selectProfile && ['RP-checklist','RP-verifica-liv2','RP-verifica-liv3'].includes(client.selectProfile.codice)">
+                <ng-container *ngIf="progetto.checklist && progetto.checklist.stato === 'DA COMPILARE'">
+                  <span>...</span>
+                </ng-container>
+                <ng-container *ngIf="progetto.checklist && progetto.checklist.stato !== 'DA COMPILARE'">
+                  <span
+                    *ngIf="progetto.ultima_verifica && progetto.ultima_verifica.utente && progetto.ultima_verifica.data">
+                    {{ progetto.ultima_verifica.utente }} <br> {{ progetto.ultima_verifica.data }}
+                  </span>
+                  <span
+                    *ngIf="!progetto.ultima_verifica || !progetto.ultima_verifica.utente || !progetto.ultima_verifica.data">...</span>
+                </ng-container>
+              </td>
+              <!-- MODIFICA RECENTE -->
+              <td class="generic_font_13" style="vertical-align: middle; text-align: center;"
+                [ngStyle]="{'background-color': progetto.modifica_recente ? 'orange' : 'inherit'}"
+                *ngIf="client.selectProfile && ['RP-checklist','RP-verifica-liv2','RP-verifica-liv3'].includes(client.selectProfile.codice)">
+                <ng-container *ngIf="progetto.checklist && progetto.checklist.stato === 'DA COMPILARE'">
+                  <span>...</span>
+                </ng-container>
+                <ng-container *ngIf="progetto.checklist && progetto.checklist.stato !== 'DA COMPILARE'">
+                  <span *ngIf="!progetto.modifica_recente">...</span>
+                  <span *ngIf="progetto.modifica_recente" style="background-color: orange;">(*)</span>
+                </ng-container>
+                <ng-container *ngIf="!progetto.checklist">
+                  <span>...</span>
+                </ng-container>
+              </td>
+              <!-- AZIONI -->
+              <td class="generic_font_13 text-nowrap" colspan="3" style="vertical-align: middle;">
+                <!-- If stato DA COMPILARE -->
+                <ng-container *ngIf="progetto.checklist && progetto.checklist.stato === 'DA COMPILARE'">
+                  <img class="img-fluid occhio" src="assets/img/OcchioGrigio.svg"
+                    alt="Checklist non ancora disponibile">
+                  <!-- Se verifica disattivo matita -->
+                  <ng-container
+                    *ngIf="client.selectProfile && ['RP-verifica-liv2','RP-verifica-liv3'].includes(client.selectProfile.codice); else elseTemplateVerifica">
+                    <img class="img-fluid ml-2 matita" src="assets/img/MatitaGrigia.svg"
+                      alt="Compila/Modifica checklist">
+                  </ng-container>
+                  <ng-template #elseTemplateVerifica>
+                    <img class="img-fluid ml-2 matita icon-enabled" src="assets/img/MatitaBlu.svg"
+                      alt="Compila/Modifica checklist" (click)="showModifica(progetto.cup)">
+                  </ng-template>
+                  <img class="img-fluid ml-2 mr-3 dowloadPdf" src="assets/img/DownloadPdfGrigio.svg"
+                    alt="Report PDF non disponibile">
+                </ng-container>
+                <!-- If not stato DA COMPILARE -->
+                <ng-container *ngIf="progetto.checklist && progetto.checklist.stato !== 'DA COMPILARE'">
+                  <img class="img-fluid occhio icon-enabled" src="assets/img/OcchioBlu.svg"
+                    alt="Apri Checklist in sola lettura" (click)="showDettaglio(progetto.cup)">
+
+                  <!-- If stato >= COMPLETATA -->
+                  <ng-container *ngIf="checkModificaStatoCompletata(progetto); else elseTemplate">
+                    <img class="img-fluid ml-2 matita" src="assets/img/MatitaGrigia.svg"
+                      alt="Compila/Modifica checklist">
+                  </ng-container>
+                  <!-- If stato < COMPLETATA -->
+                  <ng-template #elseTemplate>
+                    <ng-container *ngIf="client.checkAzioni(azioni.RUP_CUP_SCRITTURA); else elseTemplateAzione">
+                      <img class="img-fluid ml-2 matita icon-enabled" src="assets/img/MatitaBlu.svg"
+                        alt="Compila/Modifica checklist" (click)="showModifica(progetto.cup)">
+                    </ng-container>
+                    <ng-template #elseTemplateAzione>
+                      <!-- Se verifica o checklist -->
+                      <ng-container
+                        *ngIf="client.selectProfile && ['RP-verifica-liv2','RP-verifica-liv3'].includes(client.selectProfile.codice); else elseTemplateVerifica">
+                        <img class="img-fluid ml-2 matita icon-enabled" src="assets/img/MatitaBlu.svg"
+                          alt="Compila/Modifica checklist" (click)="showVerificaLivelloDue(progetto.cup)"
+                          *ngIf="client.checkAzioni(azioni.VERIFICA_LIVELLO_DUE)">
+                        <img class="img-fluid ml-2 matita icon-enabled" src="assets/img/MatitaBlu.svg"
+                          alt="Compila/Modifica checklist" (click)="showVerificaLivelloTre(progetto.cup)"
+                          *ngIf="client.checkAzioni(azioni.VERIFICA_LIVELLO_TRE)">
+                      </ng-container>
+                      <ng-template #elseTemplateVerifica>
+                        <img class="img-fluid ml-2 matita" src="assets/img/MatitaGrigia.svg"
+                          alt="Compila/Modifica checklist">
+                      </ng-template>
+                    </ng-template>
+                  </ng-template>
+
+                  <img class="img-fluid ml-2 mr-3 dowloadPdf icon-enabled" src="assets/img/DownloadPdfBlu.svg"
+                    alt="Report PDF" (click)="downloadPdf(progetto.cup)">
+                </ng-container>
+              </td>
+            </tr>
+          </ng-container>
+        </ng-container>
+      </tbody>
+    </table>
+    <div class="d-flex justify-content-between w-100">
+      <ngb-pagination [collectionSize]="collectionSize" [(page)]="page" [pageSize]="pageSize" (pageChange)="cerca()"
+        [boundaryLinks]="true" [maxSize]="5">
+      </ngb-pagination>
+
+      <select class="custom-select" style="width: auto" [(ngModel)]="pageSize" (ngModelChange)="cerca()">
+        <option [ngValue]="5">5</option>
+        <option [ngValue]="10">10</option>
+        <option [ngValue]="15">15</option>
+      </select>
+    </div>
+  </ng-container>
+  <ng-container *ngIf="listaProgetti && listaProgetti.length <= 0">
+    <p class="generic_font_16 m-3">Nessun progetto presente</p>
+  </ng-container>
+  <br>
+  <br>
+  <div class="row" *ngIf="listaProgetti && listaProgetti.length > 0">
+    <div class="col-auto d-flex justify-content-start">
+      <button type="button" class="btn btn-outline-primary btn-s-bozza" (click)="downloadCsv()">SCARICA CSV</button>
+    </div>
+  </div>
+  <br>
+  <br>
+</ng-container>

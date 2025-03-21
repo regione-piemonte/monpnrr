@@ -1,0 +1,101 @@
+<nav class="navbar navbar-light style-nav-bar">
+  <div class="row w-100">
+    <!-- <div class="col-md-auto">
+      <button mat-icon-button class="text-light" (click)="sidenav.toggle();" disabled>
+        <mat-icon>menu</mat-icon>
+      </button>
+    </div> -->
+    <div class="col-md-auto mr-auto d-flex align-items-center">
+      <p class="text-white m-0" style="font: normal normal bold 24px/5px Open Sans;">Monitoraggio Progetti PNRR</p>
+    </div>
+    <div class="col-md-auto mr-2 d-flex align-items-center">
+      <button mat-button [matMenuTriggerFor]="menuAssistenza" class="mr-2 mat-fat-style"
+        *ngIf="nome !== '' && cognome !== ''">
+        <span class="text-login-button">ASSISTENZA</span>
+      </button>
+      <!-- <button mat-mini-fab class="mr-2 mat-fat-style" (click)="client.openUrlPdf()">
+        ?
+      </button> -->
+      <!-- mat-mini-fab -->
+      <button mat-button [matMenuTriggerFor]="menu" class="mr-2 mat-fat-style" *ngIf="nome !== '' && cognome !== ''">
+        <span class="text-login-button">
+          {{ nome.substring(0, 1) }}
+          {{ cognome.substring(0, 1) }}
+        </span>
+      </button>
+    </div>
+  </div>
+  <mat-menu #menuAssistenza="matMenu" class="mt-1">
+    <button mat-menu-item (click)="client.openUrlPdf()" class="d-flex align-items-center">
+      <em class="bi bi-file-earmark-pdf pr-2"></em>
+      <span>MANUALE UTENTE</span>
+    </button>
+    <button mat-menu-item (click)="client.gotoAssistenza()" class="d-flex align-items-center">
+      <em class="bi bi-info-square pr-2"></em>
+      <span>RICHIESTA ASSISTENZA</span>
+    </button>
+  </mat-menu>
+  <mat-menu #menu="matMenu" class="mt-1">
+    <button mat-menu-item (click)="goToPaginaPersonale()" class="d-flex align-items-center">
+      <!-- <mat-icon class="icon-item-button">person</mat-icon> -->
+      <em class="bi bi-person-badge pr-2"></em>
+      <span>{{ nome }} {{ cognome }}</span>
+    </button>
+    <button mat-menu-item (click)="goLogout()" class="d-flex align-items-center">
+      <em class="bi bi-box-arrow-left pr-2"></em>
+      <span>ESCI</span>
+    </button>
+  </mat-menu>
+</nav>
+<nav class="navbar navbar-light style-nav-bar-collocazione m-0 p-0" *ngIf="struttura !== '' && ruolo !== ''">
+  <div class="row w-100 d-flex align-items-center m-0 p-0">
+    <div class="col-md-auto mr-auto ml-3 d-flex align-items-center">
+      <span class="text-white" style="font-size: 14px;">{{struttura | uppercase}} > {{getCurrentRoute()}}</span>
+    </div>
+    <div class="col-md-auto mr-2 d-flex align-items-center">
+      <span class="text-white" style="font-size: 14px;">{{ruolo | uppercase}} - {{ client.selectProfile &&
+        client.selectProfile.descrizione ? client.selectProfile.descrizione : ''}}</span>
+    </div>
+  </div>
+</nav>
+<mat-sidenav-container>
+  <mat-sidenav #sidenav mode="side" [style.width]="'280px'" [(opened)]="opened">
+    <mat-nav-list class="pl-2 pr-2">
+      <ng-container *ngFor="let item of menuItems">
+
+        <ng-container *ngIf="item.route !== ''">
+          <a mat-list-item [routerLink]="item.route" class="mb-2 route-link-style" [disabled]="client.isErrorLogin"
+            matTooltip="Rieffettua il login per poter riutilizzare l'applicativo" matTooltipPosition="above"
+            matTooltipClass="style-tooltip" [matTooltipDisabled]="!client.isErrorLogin">
+            <em [class]="item.icon"></em>
+            <span mat-line class="line-break" style="font-size: 18px;">
+              {{item.label}}
+              <span *ngIf="item.labelTwo" style="font-size: 18px;">
+                <br>{{item.labelTwo}}
+              </span>
+            </span>
+          </a>
+        </ng-container>
+        <ng-container *ngIf="item.href !== ''">
+          <a mat-list-item href="{{item.href}}" target="_blank" class="mb-2 route-link-style"
+            [disabled]="client.isErrorLogin" matTooltip="Rieffettua il login per poter riutilizzare l'applicativo"
+            matTooltipPosition="above" matTooltipClass="style-tooltip" [matTooltipDisabled]="!client.isErrorLogin">
+            <em [class]="item.icon"></em>
+            <span mat-line class="line-break" style="font-size: 18px;">
+              {{item.label}}
+              <span *ngIf="item.labelTwo" style="font-size: 18px;">
+                <br>{{item.labelTwo}}
+              </span>
+            </span>
+          </a>
+        </ng-container>
+
+      </ng-container>
+    </mat-nav-list>
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <section style="min-height: 100vh; padding-top: 2rem; background: #F0F3F8 0% 0% no-repeat padding-box;">
+      <router-outlet></router-outlet>
+    </section>
+  </mat-sidenav-content>
+</mat-sidenav-container>

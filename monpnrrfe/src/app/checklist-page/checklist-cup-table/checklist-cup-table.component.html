@@ -1,0 +1,85 @@
+<div class="d-flex justify-content-center" *ngIf="isSpinEmitter">
+  <div class="spinner-border text-primary spin-emitter-style" role="status">
+    <span class="sr-only">Loading...</span>
+  </div>
+</div>
+<ng-container *ngIf="!isSpinEmitter">
+  <div class="table-container">
+
+    <table mat-table #tablecup [dataSource]="values" class="mat-elevation-z8">
+
+      <ng-container matColumnDef="puntiDiControllo">
+        <th mat-header-cell *matHeaderCellDef class="header-blue" [attr.colspan]="3">
+          PUNTI DI CONTROLLO
+        </th>
+      </ng-container>
+
+      <ng-container matColumnDef="macroarea">
+        <th mat-header-cell *matHeaderCellDef style="display: none;"> </th>
+        <ng-container *matCellDef="let element">
+          <td mat-cell *ngIf="element?.num != null" class="cell-num" [attr.rowspan]="element?.num?.span">
+            {{element?.num?.val}} </td>
+        </ng-container>
+      </ng-container>
+
+      <ng-container matColumnDef="sezione">
+        <th mat-header-cell *matHeaderCellDef [attr.colspan]="2" class="header-blue"> SEZIONE </th>
+        <ng-container *matCellDef="let element">
+          <td mat-cell *ngIf="element?.sez != null" class="cell-sezione" [attr.rowspan]="element?.sez?.span">
+            {{element?.sez?.val}} </td>
+        </ng-container>
+      </ng-container>
+
+      <ng-container matColumnDef="sottosezione">
+        <th mat-header-cell *matHeaderCellDef class="header-blue"> SOTTOSEZIONE </th>
+        <ng-container *matCellDef="let element">
+          <td mat-cell *ngIf="element?.stsez != null" class="cell-sottosezione" [attr.rowspan]="element?.stsez?.span">
+            {{element?.stsez?.val}} </td>
+        </ng-container>
+      </ng-container>
+
+
+      <ng-container matColumnDef="documentazione">
+        <th mat-header-cell *matHeaderCellDef [attr.rowspan]="2" class="header-blue"> {{ 'DOCUMENTAZIONE \n da caricare trasversale e per CUP' }} </th>
+        <td mat-cell *matCellDef="let element" class="cell-documentazione pt-4 pb-4"> {{element?.doc}} </td>
+      </ng-container>
+
+
+      <ng-container matColumnDef="note">
+        <th mat-header-cell *matHeaderCellDef [attr.rowspan]="2" class="header-blue"> NOTE </th>
+        <td mat-cell *matCellDef="let element" class="cell-note pt-4 pb-4"> {{element?.not}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="esito">
+        <th mat-header-cell *matHeaderCellDef [attr.rowspan]="2" class="header-orange"> ESITO </th>
+        <td mat-cell *matCellDef="let element; let i = index;" class="cell-esito"
+          [class.cell-error]="element.esito.error">
+          <!-- (click)="onEsitoChangeValidazioneSi(element)" -->
+          <div class="form-check mt-4 mb-4" *ngFor="let check of client.choises"
+            [matTooltip]="MESSAGE_CHECK_VERIFICA_SI" matTooltipPosition="right" matTooltipClass="style-tooltip"
+            [matTooltipDisabled]="readOnly || !element.checkSi">
+            <!-- !checkValidazioneSi(element) ||  -->
+            <input class="form-check-input" type="radio" name="{{'esito-'+type+'-'+i}}" id="{{'esito-'+type+'-'+i}}"
+              [(ngModel)]="element.esito.val" (change)="onEsitoChange(element)" [value]="check.codice"
+              [disabled]="readOnly || !client.checkAzioni(azioni.RUP_CUP_SCRITTURA) || element.checkSi">
+            {{ check.descrizione }}
+          </div>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="notaAsr">
+        <th mat-header-cell *matHeaderCellDef [attr.rowspan]="2" class="header-orange"> {{ 'NOTA ASR \n Obbligatoria per esito "No" \n e "Non applicabile' }} </th>
+        <td mat-cell *matCellDef="let element" class="cell-nota-asr" [class.cell-error]="element.notAsr.error">
+          <textarea class="form-control" id="exampleFormControlTextarea1" rows="5" [(ngModel)]="element.notAsr.val"
+            *ngIf="client.choises"
+            [disabled]="readOnly || !client.checkAzioni(azioni.RUP_CUP_SCRITTURA) || (element?.esito.val != client.choises[1]?.codice && element?.esito.val != client.choises[2]?.codice)"></textarea>
+        </td>
+      </ng-container>
+
+
+      <tr mat-header-row *matHeaderRowDef="header1; sticky: true"></tr>
+      <tr mat-header-row *matHeaderRowDef="header2; sticky: true"></tr>
+      <tr mat-row *matRowDef="let row; columns: valueColumns"></tr>
+    </table>
+  </div>
+</ng-container>

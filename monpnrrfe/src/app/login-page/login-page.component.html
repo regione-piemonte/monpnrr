@@ -1,0 +1,42 @@
+<div style="margin-right: 10rem; margin-left: 5rem;">
+  <div class="d-flex justify-content-center" *ngIf="isSpinEmitter">
+    <div class="spinner-border text-primary spin-emitter-style" role="status">
+      <span class="sr-only">Loading...</span>
+    </div>
+  </div>
+</div>
+<ng-container
+  *ngIf="!isSpinEmitter && client.loggedUser && client.loggedUser.profili && client.loggedUser.profili.length > 1">
+  <br>
+  <br>
+  <br>
+  <br>
+  <br>
+  <div class="container">
+    <div class="row">
+      <div class="col-auto">
+        <strong style="font-size: 24px;">Utente</strong>&nbsp;&nbsp;<span style="font-size: 18px;">{{
+          client.loggedUser.richiedente.cognome }}&nbsp;{{ client.loggedUser.richiedente.nome }},&nbsp;{{
+          client.loggedUser.richiedente.codice_fiscale }}</span>
+        <br>
+        <br>
+        <span style="font-size: 16px;">Selezionare il profilo con cui operare.</span>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-4"></div>
+      <div class="col-md-4">
+        <mat-radio-group aria-labelledby="scelta profilo" class="example-radio-group" [(ngModel)]="selectedProfile">
+          <mat-radio-button class="example-radio-button" *ngFor="let profilo of client.loggedUser.profili"
+            [value]="profilo">
+            <span style="font-size: 16px;">{{profilo.descrizione ? profilo.descrizione : ''}}</span>
+          </mat-radio-button>
+        </mat-radio-group>
+        <br>
+        <button type="button" class="btn btn-primary btn-s-login " [class.button-disabled]="!selectedProfile"
+          [disabled]="!selectedProfile" (click)="profileChoice()">CONFERMA</button>
+      </div>
+      <div class="col-md-4"></div>
+    </div>
+  </div>
+</ng-container>

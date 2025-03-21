@@ -1,0 +1,41 @@
+/* You can add global styles to this file, and also import other style files */
+@import "~bootstrap-icons/font/bootstrap-icons.css";
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+.style-tooltip{
+  color: #0381d6;
+  background: #0381d6 !important;
+  font-size: 14px;
+}
+
+.spin-emitter-style {
+  width: 3rem;
+  height: 3rem;
+}
+
+.button-basic {
+  background-color: #0381d6;
+}
+
+
+.mat-radio-button.mat-accent.mat-radio-checked .mat-radio-outer-circle{
+  border-color: #005CA9;
+}
+
+.mat-radio-button.mat-accent .mat-radio-inner-circle{
+  color: #005CA9;
+  background-color: #005CA9;
+}
+
+.mat-radio-button.mat-accent .mat-radio-ripple .mat-ripple-element {
+    background-color:rgb(255, 37, 37,.26);
+}

@@ -1,0 +1,142 @@
+<div #topOfPage></div>
+<div class="d-flex justify-content-center" *ngIf="isSpinEmitter">
+  <div class="spinner-border text-primary spin-emitter-style" role="status">
+    <span class="sr-only">Loading...</span>
+  </div>
+</div>
+<ng-container *ngIf="!isSpinEmitter">
+  <checklist-success *ngIf="isSuccess" [isCompletata]="isCompletata" (endEvent)="isSuccess=false"></checklist-success>
+
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb pl-0">
+      <li class="breadcrumb-item"><a routerLink="/main-page/progetti" [skipLocationChange]="true">Elenco progetti</a>
+      </li>
+      <li class="breadcrumb-item active font-weight-bold" aria-current="page" *ngIf="choise===choiseEnum.CHECKLIST">
+        Checklist</li>
+      <li class="breadcrumb-item active font-weight-bold" aria-current="page"
+        *ngIf="choise===choiseEnum.VERIFICA_2 || choise===choiseEnum.VERIFICA_3">Autocontrollo</li>
+
+    </ol>
+  </nav>
+
+  <div class="title-checklist mb-3">
+    {{dettaglio?.checklist}}
+  </div>
+  <div class="title-checklist mb-3 pt-3" *ngIf="choise===choiseEnum.VERIFICA_2">
+    {{choiseEnum.TITOLO_VERIFICA_2}}
+  </div>
+  <div class="title-checklist mb-3 pt-3" *ngIf="choise===choiseEnum.VERIFICA_3">
+    {{choiseEnum.TITOLO_VERIFICA_3}}
+  </div>
+
+
+  <checklist-error *ngIf="isError" [isWarning]="isWarning" [errorText]="errorText" [erroriCup]="cupErrorList"
+    [erroriCig]="cigErrorList"></checklist-error>
+  <br>
+
+  <div class="detail-box-checklist">
+    <p>Azienda sanitaria: <b>{{dettaglio?.azienda?.descrizione}}</b></p>
+    <p>Intervento: <b>{{dettaglio?.intervento}}</b> </p>
+    <p>CUP: <b>{{dettaglio?.cup}}</b> </p>
+    <p>Modalità attuativa: <b>{{dettaglio?.modalita_attuativa}}</b></p>
+    <div class="row">
+      <div class="col-md-6">
+        <span class="pr-xl-5"
+          *ngIf="client.selectProfile && ['RP-verifica-liv2','RP-verifica-liv3','RP-checklist'].includes(client.selectProfile.codice)">RUP:
+          <b>{{dettaglio && dettaglio.ultima_modifica && dettaglio.ultima_modifica.utente ?
+            dettaglio.ultima_modifica.utente : ' - '}}</b>&nbsp;&nbsp;Ultima modifica: <b>{{dettaglio &&
+            dettaglio.ultima_modifica && dettaglio.ultima_modifica.data ? dettaglio.ultima_modifica.data : ' -
+            '}}</b></span>
+      </div>
+      <div class="col-md-6">
+        <span class="pl-xl-5"
+          *ngIf="client.selectProfile && ['RP-verifica-liv3'].includes(client.selectProfile.codice)">Ultimo
+          Autocontrollo: <b>{{dettaglio && dettaglio.ultima_verifica_liv2 && dettaglio.ultima_verifica_liv2.utente ?
+            dettaglio.ultima_verifica_liv2.utente : ' - '}}</b>&nbsp;&nbsp;<b>{{dettaglio && dettaglio.ultima_verifica
+            && dettaglio.ultima_verifica.data ? dettaglio.ultima_verifica.data : ' '}}</b></span>
+        <span class="pl-xl-5" *ngIf="client.selectProfile && ['RP-checklist'].includes(client.selectProfile.codice)">
+          Ultimo Autocontrollo Livello 2:
+          <b>{{dettaglio && dettaglio.ultima_verifica_liv2 && dettaglio.ultima_verifica_liv2.utente ?
+            dettaglio.ultima_verifica_liv2.utente : ' - '}}</b>
+          &nbsp;&nbsp;
+          <b>{{dettaglio && dettaglio.ultima_verifica_liv2 && dettaglio.ultima_verifica_liv2.data ?
+            dettaglio.ultima_verifica_liv2.data : ' '}}</b>
+        </span>
+      </div>
+    </div>
+    <div class="row mt-lg-2" *ngIf="client.selectProfile && ['RP-checklist'].includes(client.selectProfile.codice)">
+      <div class="col-md-6"></div>
+      <div class="col-md-6 ">
+        <span class="pl-xl-5">Ultimo Autocontrollo Livello 3: <b>{{dettaglio && dettaglio.ultima_verifica_liv3 &&
+            dettaglio.ultima_verifica_liv3.utente ? dettaglio.ultima_verifica_liv3.utente : ' - '}}</b>
+          &nbsp;&nbsp;<b>{{dettaglio && dettaglio.ultima_verifica_liv3 && dettaglio.ultima_verifica_liv3.data ?
+            dettaglio.ultima_verifica_liv3.data : ' '}}</b></span>
+      </div>
+    </div>
+  </div>
+  <br>
+
+  <checklist-button-group [showTitle]="true" [readOnly]="readOnlyButton" [statoChecklist]="checklist?.stato!"
+    [choice]="choise" (annullaEvent)="annulla()" (salvaEvent)="salva($event)"
+    (salvaEventAutocontrollo)="salvaAutocontrollo($event)" (annullaEventAutocontrollo)="annullaAutocontrollo($event)"
+    *ngIf="!readOnlyButton"></checklist-button-group>
+  <div class="checklist-content">
+    <mat-tab-group (selectedTabChange)="tabChanged($event)" mat-stretch-tabs disableRipple mat-align-tabs="center"
+      [selectedIndex]="client.activeTab" animationDuration="0ms">
+
+      <mat-tab class="tab-cup">
+        <ng-template mat-tab-label>
+          Documentazione CUP <span *ngIf="cupError" class="material-icons ml-2 icon-error"> highlight_off </span>
+        </ng-template>
+        <ng-template [ngIf]="choise===choiseEnum.CHECKLIST">
+          <checklist-cup-table #tablecup [checklist]="checkListCUP" [readOnly]="readOnly"
+            [type]="'CUP'"></checklist-cup-table>
+        </ng-template>
+        <ng-template [ngIf]="choise===choiseEnum.VERIFICA_2">
+          <verificata-cup-table #tablevercup [checklist]="checkListCUP" [readOnly]="readOnly"
+            [type]="'CUP'"></verificata-cup-table>
+        </ng-template>
+        <ng-template [ngIf]="choise===choiseEnum.VERIFICA_3">
+          <verificata-cup-table #tablevercup [checklist]="checkListCUP" [readOnly]="readOnly"
+            [type]="'CUP'"></verificata-cup-table>
+        </ng-template>
+      </mat-tab>
+
+      <mat-tab class="tab-cig">
+        <ng-template mat-tab-label>
+          Documentazione CIG <span *ngIf="cigError" class="material-icons ml-2 icon-error"> highlight_off </span>
+        </ng-template>
+
+        <app-cig-list [cigErroriProgressivo]="cigErroriProgressivo" [cigList]="checkListCIG" [stato]="checklist?.stato!"
+          [readOnly]="readOnly" (newCIG)="newCig($event)" (editCIG)="editCig($event)" (showCIG)="showCig($event)"
+          (deleteCIG)="deleteCig($event)" (editCIGAutocontrollo)="editCigAutocontrollo($event)"></app-cig-list>
+        <div class="CIG-header ml-3 mt-3" [hidden]="!checkListCIGSelected">
+          <span class="CIG-header-normal">CODICE CIG </span>
+          <span class="CIG-header-bold">{{checkListCIGSelected?.cig?.numero_cig }}</span>
+          <span class="CIG-header-normal"> - PROCEDURA </span>
+          <span class="CIG-header-bold">{{ checkListCIGSelected?.cig?.descrizione_procedura_cig }}</span>
+        </div>
+        <ng-container *ngIf="checkListCIGSelected">
+          <ng-template [ngIf]="choise===choiseEnum.CHECKLIST">
+            <checklist-cup-table #tablecig [checklist]="checkListCIGSelected" [readOnly]="readOnly"
+              [type]="'CIG'"></checklist-cup-table>
+          </ng-template>
+          <ng-template [ngIf]="choise===choiseEnum.VERIFICA_2">
+            <verificata-cup-table #tablevercig [checklist]="checkListCIGSelected" [readOnly]="readOnly"
+              [type]="'CIG'"></verificata-cup-table>
+          </ng-template>
+          <ng-template [ngIf]="choise===choiseEnum.VERIFICA_3">
+            <verificata-cup-table #tablevercig [checklist]="checkListCIGSelected" [readOnly]="readOnly"
+              [type]="'CIG'"></verificata-cup-table>
+          </ng-template>
+        </ng-container>
+      </mat-tab>
+    </mat-tab-group>
+  </div>
+  <checklist-button-group [showTitle]="false" [readOnly]="readOnlyButton" [statoChecklist]="checklist?.stato!"
+    (annullaEvent)="annulla()" (salvaEvent)="salva($event)"></checklist-button-group>
+  <br><br>
+
+  <button type="button" class="btn btn-link btn-indietro" (click)="backToRicerca()">INDIETRO</button>
+  <br><br>
+</ng-container>

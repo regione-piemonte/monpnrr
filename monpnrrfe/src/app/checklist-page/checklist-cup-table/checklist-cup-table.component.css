@@ -1,0 +1,94 @@
+table {
+    width: 100%;
+}
+
+.table-container {
+    margin-top: 10px;
+    max-height: 800px;
+    overflow-y: scroll;
+  }
+
+.mat-header-cell, .mat-cell{
+    text-align: center;
+    vertical-align: middle;
+    white-space: pre-line;
+    padding: 0 10px;
+    max-width: 100px;
+}
+
+.mat-header-cell.header-blue {
+    background: #0070C0 0% 0% no-repeat padding-box;
+    font: normal normal bold 15px / 22px 'Open Sans';
+    letter-spacing: 0px;
+    color: #F1F5F8;
+    border: 2px white solid;
+}
+
+.mat-header-cell.header-orange {
+    background: #FF9900 0% 0% no-repeat padding-box;
+    font: normal normal bold 15px / 22px 'Open Sans';
+    letter-spacing: 0px;
+    color: #000000;
+    border: 2px white solid;
+}
+
+td.mat-cell {
+
+border: 2px solid #E2DCDC;
+opacity: 1;
+}
+
+.cell-num {
+    font: normal normal bold 15px/22px 'Open Sans';
+    letter-spacing: 0px;
+    color: #000000;
+}
+
+.cell-sezione {
+    background: #D9E1F2 0% 0% no-repeat padding-box;
+    font: normal normal bold 14px/22px 'Open Sans';
+    letter-spacing: 0px;
+    color: #000000;
+}
+
+.cell-sottosezione {
+    font: normal normal bold 14px/22px 'Open Sans';
+    letter-spacing: 0px;
+    color: #000000;
+}
+
+.cell-documentazione {
+    text-align: left;
+    font: normal normal normal 13px/20px 'Open Sans';
+    letter-spacing: 0px;
+    color: #000000;
+}
+
+.cell-note {
+    text-align: left;
+    font: normal normal normal 13px/20px 'Open Sans';
+    letter-spacing: 0px;
+    color: #000000;
+}
+
+.cell-esito {
+    text-align: left;
+    font: normal normal normal 14px/19px 'Open Sans';
+    letter-spacing: 0.16px;
+    color: #000000;
+}
+
+.cell-error {
+    border: 3px red solid !important;
+}
+
+.spin-emitter-style {
+  width: 3rem;
+  height: 3rem;
+}
+
+.style-tooltip{
+  color: #0381d6;
+  background: #0381d6 !important;
+  font-size: 14px;
+}

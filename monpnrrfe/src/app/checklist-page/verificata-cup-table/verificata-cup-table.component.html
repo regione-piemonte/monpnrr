@@ -1,0 +1,102 @@
+<div class="d-flex justify-content-center" *ngIf="isSpinEmitter">
+  <div class="spinner-border text-primary spin-emitter-style" role="status">
+    <span class="sr-only">Loading...</span>
+  </div>
+</div>
+<ng-container *ngIf="!isSpinEmitter">
+<div class="table-container">
+
+    <table mat-table #tablecup [dataSource]="values" class="mat-elevation-z8">
+
+        <ng-container matColumnDef="puntiDiControllo">
+            <th mat-header-cell *matHeaderCellDef class="header-blue" [attr.colspan]="3">
+                PUNTI DI CONTROLLO
+            </th>
+        </ng-container>
+
+        <ng-container matColumnDef="macroarea">
+            <th mat-header-cell *matHeaderCellDef style="display: none;"> </th>
+            <ng-container *matCellDef="let element">
+                <td mat-cell *ngIf="element?.num != null" class="cell-num" [attr.rowspan]="element?.num?.span"> {{element?.num?.val}} </td>
+            </ng-container>
+        </ng-container>
+
+        <ng-container matColumnDef="sezione">
+            <th mat-header-cell *matHeaderCellDef [attr.colspan]="2" class="header-blue"> SEZIONE </th>
+            <ng-container *matCellDef="let element">
+                <td mat-cell *ngIf="element?.sez != null" class="cell-sezione" [attr.rowspan]="element?.sez?.span"> {{element?.sez?.val}} </td>
+            </ng-container>
+        </ng-container>
+
+        <ng-container matColumnDef="sottosezione">
+            <th mat-header-cell *matHeaderCellDef class="header-blue"> SOTTOSEZIONE </th>
+            <ng-container *matCellDef="let element">
+                <td mat-cell *ngIf="element?.stsez != null"  class="cell-sottosezione" [attr.rowspan]="element?.stsez?.span"> {{element?.stsez?.val}} </td>
+            </ng-container>
+        </ng-container>
+
+
+        <ng-container matColumnDef="documentazione">
+            <th mat-header-cell *matHeaderCellDef [attr.rowspan]="2" class="header-blue"> {{ 'DOCUMENTAZIONE \n da caricare trasversale e per CUP' }} </th>
+                <td mat-cell *matCellDef="let element"  class="cell-documentazione pt-4 pb-4"> {{element?.doc}} </td>
+        </ng-container>
+
+
+        <ng-container matColumnDef="note">
+            <th mat-header-cell *matHeaderCellDef [attr.rowspan]="2" class="header-blue"> NOTE </th>
+            <td mat-cell *matCellDef="let element"  class="cell-note">
+              <div class="d-flex justify-content-center">
+                <em class="bi bi-card-text" (click)="showDialogNote(element.not)" style="cursor: pointer;color: #005CA9;"></em>
+              </div>
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="esito">
+            <th mat-header-cell *matHeaderCellDef [attr.rowspan]="2" class="header-blue"> ESITO </th>
+            <td mat-cell *matCellDef="let element; let i = index;"  class="cell-esito" [class.cell-error]="element.esito.error">
+                <ng-container [ngSwitch]="element.esito.val">
+                    <div class="d-flex justify-content-center" *ngSwitchCase="esitoTable.SI">
+                        {{esitoTable.CARICATA}}
+                    </div>
+                    <div class="d-flex justify-content-center" *ngSwitchCase="esitoTable.NO">
+                        {{esitoTable.NON_CARICATA}}
+                    </div>
+                    <div class="d-flex justify-content-center" *ngSwitchCase="esitoTable.NON_APPLICABILE">
+                        {{esitoTable.NON_APPLICABILE_VERIFICATA}}
+                    </div>
+                    <div class="d-flex justify-content-center" *ngSwitchCase="esitoTable.NON_APPLICABILE_PER_AVANZAMENTO">
+                        {{esitoTable.NON_APPLICABILE_PER_AVANZAMENTO_VERIFICATA}}
+                    </div>
+                    <div class="d-flex justify-content-center" *ngSwitchCase="null">
+                        {{esitoTable.NON_COMPILATO}}
+                    </div>
+                </ng-container>
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="notaAsr">
+            <th mat-header-cell *matHeaderCellDef [attr.rowspan]="2" class="header-blue"> {{ 'NOTA ASR \n Obbligatoria per esito "No" \n e "Non applicabile' }} </th>
+            <td mat-cell *matCellDef="let element"  class="cell-nota-asr" [class.cell-error]="element.notAsr.error">
+                <textarea class="form-control" id="exampleFormControlTextarea1" rows="5" [(ngModel)]="element.notAsr.val" [disabled]="readOnly || !client.checkAzioni(azioni.RUP_CUP_SCRITTURA) || (element?.esito.val != choises[1]?.codice && element?.esito.val != choises[2]?.codice)"></textarea>
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="verifica">
+            <th mat-header-cell *matHeaderCellDef [attr.rowspan]="2" class="header-blue"> AUTOCONTROLLO </th>
+            <td mat-cell *matCellDef="let element">
+              <ng-container *ngIf="!element.esito.val; else elseTemplateIconaVerifica">
+                <em class="bi bi-check-circle"></em>
+              </ng-container>
+              <ng-template #elseTemplateIconaVerifica>
+                <em class="bi bi-check-circle" (click)="showDialogVerifica(element)" style="cursor: pointer;" [class.circle-red]="checkCircleRed(element)" [class.circle-green]="checkCircleGreen(element)"></em>
+              </ng-template>
+            </td>
+        </ng-container>
+
+
+        <tr mat-header-row *matHeaderRowDef="header1; sticky: true"></tr>
+        <tr mat-header-row *matHeaderRowDef="header2; sticky: true"></tr>
+        <tr mat-row *matRowDef="let row; columns: valueColumns"></tr>
+    </table>
+</div>
+</ng-container>

@@ -1,0 +1,53 @@
+.custom-checkbox {
+  width: 15px; /* Larghezza desiderata */
+  height: 15px; /* Altezza desiderata */
+  transform: scale(1.5); /* Scala la dimensione della checkbox */
+  -webkit-transform: scale(1.5); /* Scala per i browser Webkit */
+  -moz-transform: scale(1.5); /* Scala per i browser Mozilla */
+  -ms-transform: scale(1.5); /* Scala per i browser Microsoft */
+  -o-transform: scale(1.5); /* Scala per i browser Opera */
+  margin: 5px; /* Spazio extra attorno alla checkbox */
+}
+
+.custom-checkbox:checked {
+  background-color: #0381d6; /* Colore di sfondo quando selezionata */
+}
+
+
+.button-disabled {
+  opacity: 60%;
+}
+.btn-s-salva {
+  display: inline-block;
+  margin-right: 15px;
+  padding-left: 50px;
+  padding-right: 50px;
+  background: #005CA9 0% 0% no-repeat padding-box;
+  border: 2px solid #005CA9;
+  font-weight: 500;
+  border-radius: 3px;
+  opacity: 1;
+  letter-spacing: 0px;
+  color: #FFFFFF;
+}
+
+
+.error-container {
+  width: 80%;
+  background-color: #FEE7E8;
+  border-left: 6px #F41622 solid;
+}
+.icon-error {
+  color: #F41622;
+  font-size: 50px;
+}
+.error-title {
+  font: normal normal bold 16px/22px 'Open Sans';
+  letter-spacing: 0px;
+  opacity: 1;
+}
+.error-text {
+  font: normal normal normal 14px/20px 'Open Sans';
+  letter-spacing: 0px;
+  opacity: 1;
+}

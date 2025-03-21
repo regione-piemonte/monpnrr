@@ -1,0 +1,19 @@
+spring:
+  datasource:
+    driver: org.postgresql.Driver
+    url: jdbc:postgresql://XXX
+    username: XXX
+    password: XXX
+db:
+  encryption:
+    key: XXX
+AbstractHttpConfigurer:
+  enableCsrf: false
+#Modalità di sviluppo per il filtro ItideIdAdapter
+IrideIdAdapterFilter:
+  devmode: true
+configuratore:
+  base:
+    url: https://XXXX
+  auth:
+    base64: XXX

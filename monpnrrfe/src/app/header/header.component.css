@@ -1,0 +1,32 @@
+.style-nav-bar {
+  background: #026cb3;
+  height: 60px !important;
+}
+
+.style-nav-bar-collocazione {
+  /* background: #006CB4 0% 0% no-repeat padding-box; */
+  background: #0381d6;
+  height: 30px !important;
+}
+
+.route-link-style {
+  border-style: solid;
+  border-width:  1px;
+  border-color: lightgray;
+  border-radius: 5px;
+}
+
+.mat-fat-style {
+  background-color: white;
+  color: #0381d6;
+  font-size: 16px;
+}
+
+.bi {
+  font-size:  2rem;
+  color: #0381d6;
+}
+
+.line-break {
+  white-space: break-spaces; /* o break-spaces a seconda delle tue esigenze */
+}

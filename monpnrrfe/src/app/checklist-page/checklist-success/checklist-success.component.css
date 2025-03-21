@@ -1,0 +1,38 @@
+
+#overlay  {
+    background: rgba(140, 140, 140, 0.8);
+    position: fixed;
+    height: 100%;
+    width: 100%;
+    z-index: 199999;
+    top: 0;
+    left: 0;
+    float: left;
+    padding-top: 20%;
+    /* opacity: .80; */
+  }
+
+.success-container {
+    width: 40%;
+    background-color: #DFF0D9;
+    border-left: 6px #61B87A solid;
+    margin: 0 auto;
+    opacity: 1;
+}
+
+.success-title {
+    font: normal normal bold 16px/22px 'Open Sans';
+    letter-spacing: 0px;
+    opacity: 1; 
+}
+
+.success-text {
+    font: normal normal normal 14px/20px 'Open Sans';
+    letter-spacing: 0px;
+    opacity: 1; 
+}
+
+.icon-success {
+    color: #61B87A;
+    font-size: 50px;
+}

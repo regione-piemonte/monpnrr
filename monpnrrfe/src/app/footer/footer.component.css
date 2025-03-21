@@ -1,0 +1,14 @@
+/* TOOLBAR STYLE */
+.style-tool-bar {
+  background: #0D47A1;
+  height: 100px !important;
+}
+
+::ng-deep.mat-toolbar-multiple-rows {
+  min-height: 80px !important;
+}
+
+.style-tool-bar-two {
+  background: #006CB4;
+  height: 80px !important;
+}

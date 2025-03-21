@@ -1,0 +1,44 @@
+<div [ngClass]="isWarning ? 'warning-container' : 'error-container'">
+  <div class="row pt-4 pb-3 pr-3">
+    <div class="col-md-2" style="text-align: center;">
+      <span class="material-icons" [ngClass]="isWarning ? 'icon-warning' : 'icon-error'"> {{ isWarning ? 'warning' :
+        'highlight_off'}} </span>
+    </div>
+    <div class="col-md-10">
+      <ng-container *ngIf="isWarning; else elseTemplate">
+        <p class="error-title">Messaggio di avviso</p>
+      </ng-container>
+      <ng-template #elseTemplate>
+        <p class="error-title">Messaggio di errore</p>
+      </ng-template>
+      <p *ngIf="!errorText || errorText.trim().length == 0" class="error-text">Non è possibile completare l'operazione
+        di salvataggio: uno o più dati sono mancanti o presentano un errore, sono contrassegnati in rosso.</p>
+      <p *ngIf="errorText && errorText.trim().length > 0" class="error-text" [innerHTML]="errorText"></p>
+      <ng-container *ngIf="erroriCup.length != 0">
+        <p class="error-text">Nella sezione <b>Documentazione CUP</b> sono presenti i seguenti errori:</p>
+        <ul>
+          <li *ngFor="let error of erroriCup" class="error-text">
+            <p class="error-text" [innerHTML]="error"></p>
+          </li>
+        </ul>
+      </ng-container>
+
+      <ng-container *ngIf="erroriCig.length != 0">
+        <p class="error-text">Nella sezione <b>Documentazione CIG</b> sono presenti i seguenti errori:</p>
+        <ul>
+          <li *ngFor="let error of erroriCig" class="error-text">
+            <p class="error-text" [innerHTML]="error"></p>
+          </li>
+        </ul>
+      </ng-container>
+      <ng-container *ngIf="client.mancanzaCigError && client.mancanzaCigError.trim().length > 0">
+        <p class="error-text">Nella sezione <b>Documentazione CIG</b> sono presenti i seguenti errori:</p>
+        <ul>
+          <li class="error-text">
+            <p class="error-text" [innerHTML]="client.mancanzaCigError"></p>
+          </li>
+        </ul>
+      </ng-container>
+    </div>
+  </div>
+</div>
