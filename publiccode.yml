@@ -1,4 +1,4 @@
-publiccodeYmlVersion: 0.4.0
+publiccodeYmlVersion: '0.4.0'
 name: MONPNRR
 url: https://github.com/regione-piemonte/monpnrr.git
 landingURL: https://github.com/regione-piemonte/monpnrr
@@ -75,3 +75,7 @@ localisation:
   localisationReady: false
   availableLanguages:
   - it-IT
+it:
+  countryExtensionVersion: '1.0'
+  riuso:
+    codiceIPA: r_piemon
